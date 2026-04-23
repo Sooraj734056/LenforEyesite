@@ -1,0 +1,52 @@
+.authPage {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--off-white);
+  padding: 48px 16px;
+}
+.authCard {
+  background: white;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 480px;
+  border: 1px solid var(--border);
+  animation: fadeUp 0.4s ease;
+}
+.authLogo { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
+.authLogoText { font-size: 0.8rem; font-weight: 800; color: var(--black); letter-spacing: 0.05em; }
+.authTitle { font-size: 1.75rem; font-weight: 800; margin-bottom: 4px; }
+.authSub { color: var(--gray-mid); margin-bottom: 32px; font-size: 0.9rem; }
+.authForm { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
+.forgotWrap { display: flex; justify-content: flex-end; }
+.forgotLink { font-size: 0.825rem; color: var(--primary); font-weight: 500; }
+.forgotLink:hover { text-decoration: underline; }
+
+.authDivider {
+  display: flex; align-items: center; gap: 12px; margin: 20px 0;
+  font-size: 0.75rem; color: var(--gray-light);
+}
+.authDivider::before, .authDivider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+.demoCards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 24px; }
+.demoCard {
+  padding: 12px; border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); cursor: pointer;
+  transition: var(--transition); text-align: center;
+}
+.demoCard:hover { border-color: var(--primary); background: var(--primary-glow); }
+.demoLabel { font-size: 0.75rem; font-weight: 700; color: var(--black); margin-bottom: 4px; }
+.demoEmail { font-size: 0.7rem; color: var(--gray-mid); margin-bottom: 2px; }
+.demoPass { font-size: 0.72rem; color: var(--primary); font-weight: 600; }
+
+.authSwitch { text-align: center; font-size: 0.875rem; color: var(--gray-mid); }
+.authLink { color: var(--primary); font-weight: 600; }
+.authLink:hover { text-decoration: underline; }
+
+@media (max-width: 480px) {
+  .authCard { padding: 32px 20px; }
+  .demoCards { grid-template-columns: 1fr; }
+}

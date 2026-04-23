@@ -1,0 +1,29 @@
+.bar {
+  background: var(--black);
+  height: 36px;
+  overflow: hidden;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  z-index: 2000;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 100%;
+}
+
+.offer {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  padding: 0 20px;
+}

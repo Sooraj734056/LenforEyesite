@@ -1,0 +1,63 @@
+.footer { background: var(--dark); color: white; }
+
+.footerTop { padding: 64px 0 48px; }
+
+.footerGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 48px;
+}
+
+/* Brand */
+.brandCol {}
+.logo { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.logoMain { font-size: 1rem; font-weight: 800; color: white; letter-spacing: 0.05em; }
+.logoSub { font-size: 0.65rem; color: var(--gray-light); letter-spacing: 0.08em; }
+.brandDesc { color: var(--gray-light); font-size: 0.875rem; line-height: 1.7; margin-bottom: 24px; }
+
+.contact { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+.contactItem {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 0.8rem; color: var(--gray-light);
+}
+.contactItem a { color: var(--primary); transition: var(--transition); }
+.contactItem a:hover { color: var(--primary-light); }
+
+.social { display: flex; gap: 8px; }
+.socialBtn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--dark-3); color: var(--gray-light);
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+.socialBtn:hover { background: var(--primary); color: white; transform: translateY(-2px); }
+
+/* Link Columns */
+.linkCol {}
+.colTitle { font-size: 0.875rem; font-weight: 700; color: white; margin-bottom: 16px; letter-spacing: 0.05em; text-transform: uppercase; }
+.linkList { display: flex; flex-direction: column; gap: 8px; }
+.footerLink { font-size: 0.85rem; color: var(--gray-light); transition: var(--transition); }
+.footerLink:hover { color: var(--primary); padding-left: 4px; }
+
+/* Bottom */
+.footerBottom { border-top: 1px solid var(--dark-3); padding: 20px 0; }
+.bottomInner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+.bottomInner p { font-size: 0.8rem; color: var(--gray-mid); }
+.payments { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--gray-mid); }
+.payIcon {
+  padding: 3px 8px; border: 1px solid var(--border-dark);
+  border-radius: 4px; font-size: 0.7rem; font-weight: 600; color: var(--gray-light);
+}
+
+@media (max-width: 1024px) {
+  .footerGrid { grid-template-columns: 2fr 1fr 1fr; gap: 32px; }
+}
+@media (max-width: 768px) {
+  .footerGrid { grid-template-columns: 1fr 1fr; gap: 24px; }
+  .brandCol { grid-column: 1 / -1; }
+  .footerTop { padding: 48px 0 32px; }
+  .bottomInner { flex-direction: column; text-align: center; }
+}
+@media (max-width: 480px) {
+  .footerGrid { grid-template-columns: 1fr; }
+}
