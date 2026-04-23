@@ -18,7 +18,7 @@ app.use('/api/', limiter);
 
 // ─── Middleware ──────────────────────────────────────────────────────────────
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: (process.env.CLIENT_URL || 'http://localhost:3000').replace(/\/$/, ''),
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
@@ -43,6 +43,15 @@ app.use('/api/admin', require('./routes/admin'));
 app.use('/api/payments', require('./routes/payments'));
 app.use('/api/coupons', require('./routes/coupons'));
 app.use('/api/banners', require('./routes/banners'));
+app.get('/api/seed-db', async (req, res) => {
+  try {
+    const seed = require('./seed-script-logic');
+    await seed();
+    res.json({ success: true, message: 'Database seeded successfully!' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
 
 // ─── Health Check ────────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
