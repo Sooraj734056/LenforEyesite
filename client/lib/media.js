@@ -13,6 +13,12 @@ export function resolveMediaUrl(url) {
   if (/^(?:[a-z]+:)?\/\//i.test(url) || url.startsWith('data:') || url.startsWith('blob:')) {
     return url;
   }
+  
+  // If it's a local static image from the public folder, return as is
+  if (url.startsWith('/img/') || url.startsWith('/favicon')) {
+    return url;
+  }
+
   if (!url.startsWith('/')) return url;
 
   const origin = getApiOrigin();
