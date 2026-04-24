@@ -244,9 +244,9 @@ const sampleProducts = [
 
 const sampleBanners = [
   {
-    title: 'See the World in Clarity',
-    subtitle: 'Up to 60% off on Premium Eyewear',
-    imageUrl: '/img/img1.jpg',
+    title: 'Premium Eyewear Collection',
+    subtitle: 'Discover the perfect blend of style and clarity',
+    imageUrl: '/img/banners/hero1.png',
     link: '/products',
     buttonText: 'Shop Now',
     position: 'hero', order: 1, isActive: true, bgColor: '#00AEEF'
@@ -254,7 +254,7 @@ const sampleBanners = [
   {
     title: 'Free Home Eye Test in Jaipur',
     subtitle: 'Book your appointment today — it\'s free!',
-    imageUrl: '/img/img2.jpg',
+    imageUrl: '/img/banners/hero2.png',
     link: '/contact',
     buttonText: 'Book Appointment',
     position: 'hero', order: 2, isActive: true, bgColor: '#0057A8'
@@ -262,7 +262,7 @@ const sampleBanners = [
   {
     title: 'Zeiss & Crizal Lenses Available',
     subtitle: 'Premium lens brands at affordable prices',
-    imageUrl: '/img/img3.jpg',
+    imageUrl: '/img/banners/hero3.png',
     link: '/products?brand=Zeiss',
     buttonText: 'Explore',
     position: 'hero', order: 3, isActive: true, bgColor: '#003580'
