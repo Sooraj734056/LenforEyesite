@@ -280,6 +280,7 @@ export default function Navbar() {
                 </Link>
               ))}
               <Link href="/contact#appointment" className={styles.mobileLink}>📅 Book Eye Test</Link>
+              <Link href="/account/wishlist" className={styles.mobileLink}>❤️ My Wishlist</Link>
               {user ? (
                 <>
                   <Link href="/account" className={styles.mobileLink}>👤 My Account</Link>

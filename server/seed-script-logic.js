@@ -11,8 +11,8 @@ const sampleProducts = [
     price: 8500, comparePrice: 11000, discount: 23,
     slug: 'ray-ban-wayfarer-classic-rb2140',
     variants: [
-      { color: 'Black', colorHex: '#000000', images: ['/img/products/rayban_wayfarer_1776925095455.png'], stock: 20, sku: 'RB-2140-BLK' },
-      { color: 'Tortoise', colorHex: '#8B4513', images: ['/img/products/rayban_wayfarer_1776925095455.png'], stock: 15, sku: 'RB-2140-TRT' }
+      { color: 'Black', colorHex: '#000000', images: ['/img/products/rayban_wayfarer.png'], stock: 20, sku: 'RB-2140-BLK' },
+      { color: 'Tortoise', colorHex: '#8B4513', images: ['/img/products/rayban_wayfarer.png'], stock: 15, sku: 'RB-2140-TRT' }
     ],
     features: ['100% UV Protection', 'Polarized Crystal Lenses', 'Classic Acetate Frame', 'Iconic Wayfarer Shape'],
     description: 'The original Wayfarer — worn by icons from Audrey Hepburn to Bob Dylan. Bold, universal and timeless.',
@@ -26,8 +26,8 @@ const sampleProducts = [
     price: 9200, comparePrice: 12500, discount: 26,
     slug: 'ray-ban-aviator-classic-rb3025',
     variants: [
-      { color: 'Gold Green', colorHex: '#FFD700', images: ['/img/products/rayban_aviator_1776925112753.png'], stock: 18, sku: 'RB-3025-GLD' },
-      { color: 'Silver Blue', colorHex: '#C0C0C0', images: ['/img/products/rayban_aviator_1776925112753.png'], stock: 12, sku: 'RB-3025-SLV' }
+      { color: 'Gold Green', colorHex: '#FFD700', images: ['/img/products/rayban_aviator.png'], stock: 18, sku: 'RB-3025-GLD' },
+      { color: 'Silver Blue', colorHex: '#C0C0C0', images: ['/img/products/rayban_aviator.png'], stock: 12, sku: 'RB-3025-SLV' }
     ],
     features: ['Polarized Green/Blue Lenses', 'Gold Plated Metal Frame', 'Military Origin Design', '100% UV Protection'],
     description: 'Born from the military, worn by legends. The Aviator is the original Ray-Ban — bold, commanding and beautifully crafted.',
@@ -41,7 +41,7 @@ const sampleProducts = [
     price: 7800, comparePrice: 10500, discount: 26,
     slug: 'ray-ban-round-metal-rb3447',
     variants: [
-      { color: 'Bronze Gold', colorHex: '#CD7F32', images: ['/img/products/rayban_aviator_1776925112753.png'], stock: 14, sku: 'RB-3447-BRZ' },
+      { color: 'Bronze Gold', colorHex: '#CD7F32', images: ['/img/products/rayban_aviator.png'], stock: 14, sku: 'RB-3447-BRZ' },
     ],
     features: ['Retro Round Shape', 'Metal Frame', '100% UV Protection', 'Crystal Clear Lenses'],
     description: 'A tribute to the free-thinking artists of the 1960s, the Round Metal is a philosophical frame that makes a timeless statement.',
@@ -57,8 +57,8 @@ const sampleProducts = [
     price: 4200, comparePrice: 6500, discount: 35,
     slug: 'vogue-cat-eye-signature-vo5576',
     variants: [
-      { color: 'Tortoise Gold', colorHex: '#C68E18', images: ['/img/products/vogue_cateye_1776925126713.png'], stock: 22, sku: 'VG-CAT-GLD' },
-      { color: 'Black', colorHex: '#000000', images: ['/img/products/vogue_cateye_1776925126713.png'], stock: 18, sku: 'VG-CAT-BLK' }
+      { color: 'Tortoise Gold', colorHex: '#C68E18', images: ['/img/products/vogue_cateye.png'], stock: 22, sku: 'VG-CAT-GLD' },
+      { color: 'Black', colorHex: '#000000', images: ['/img/products/vogue_cateye.png'], stock: 18, sku: 'VG-CAT-BLK' }
     ],
     features: ['Premium Acetate', 'Feminine Cat-Eye Silhouette', 'Spring Hinges', 'Made in Italy'],
     description: 'Chic and feminine cat-eye frames that command attention. A fashion statement for the modern woman.',
@@ -72,7 +72,7 @@ const sampleProducts = [
     price: 4800, comparePrice: 7000, discount: 31,
     slug: 'vogue-butterfly-vo5454',
     variants: [
-      { color: 'Pink Glitter', colorHex: '#FF69B4', images: ['/img/products/vogue_cateye_1776925126713.png'], stock: 16, sku: 'VG-BUT-PNK' },
+      { color: 'Pink Glitter', colorHex: '#FF69B4', images: ['/img/products/vogue_cateye.png'], stock: 16, sku: 'VG-BUT-PNK' },
     ],
     features: ['Oversized Butterfly Shape', 'UV400 Protection', 'Gradient Lens', 'Light Acetate Frame'],
     description: 'Bold, glamorous oversized butterfly shades for the woman who loves making an entrance.',
@@ -88,8 +88,8 @@ const sampleProducts = [
     price: 999, comparePrice: 1599, discount: 38,
     slug: 'fastrack-sport-blue-cut-computer',
     variants: [
-      { color: 'Blue', colorHex: '#00AEEF', images: ['/img/products/fastrack_sport_1776925151615.png'], stock: 60, sku: 'FT-CG-001-BLU' },
-      { color: 'Black', colorHex: '#111111', images: ['/img/products/fastrack_sport_1776925151615.png'], stock: 45, sku: 'FT-CG-001-BLK' }
+      { color: 'Blue', colorHex: '#00AEEF', images: ['/img/products/fastrack_sport.png'], stock: 60, sku: 'FT-CG-001-BLU' },
+      { color: 'Black', colorHex: '#111111', images: ['/img/products/fastrack_sport.png'], stock: 45, sku: 'FT-CG-001-BLK' }
     ],
     features: ['Blue Light Blocking', 'Anti-Glare Coating', 'Flexible TR90 Frame', 'Lightweight Design'],
     description: 'Protect your eyes from harmful screen light with Fastrack\'s sporty and flexible computer glasses.',
@@ -103,8 +103,8 @@ const sampleProducts = [
     price: 1299, comparePrice: 1999, discount: 35,
     slug: 'fastrack-neon-rectangular-sunglasses',
     variants: [
-      { color: 'Neon Green', colorHex: '#39FF14', images: ['/img/products/fastrack_sport_1776925151615.png'], stock: 35, sku: 'FT-SUN-NEO-GRN' },
-      { color: 'Red', colorHex: '#FF0000', images: ['/img/products/fastrack_sport_1776925151615.png'], stock: 28, sku: 'FT-SUN-RED' }
+      { color: 'Neon Green', colorHex: '#39FF14', images: ['/img/products/fastrack_sport.png'], stock: 35, sku: 'FT-SUN-NEO-GRN' },
+      { color: 'Red', colorHex: '#FF0000', images: ['/img/products/fastrack_sport.png'], stock: 28, sku: 'FT-SUN-RED' }
     ],
     features: ['UV400 Protection', 'Polarized Option', 'Bold Sporty Design', 'Rubber Grip Temples'],
     description: 'Bold and bright — Fastrack\'s neon frames for those who refuse to blend in.',
@@ -120,8 +120,8 @@ const sampleProducts = [
     price: 5999, comparePrice: 8999, discount: 33,
     slug: 'zeiss-blue-protect-premium-computer',
     variants: [
-      { color: 'Black Matte', colorHex: '#1a1a1a', images: ['/img/products/zeiss_computer_1776925166165.png'], stock: 15, sku: 'ZS-BP-BLK' },
-      { color: 'Gunmetal', colorHex: '#636363', images: ['/img/products/zeiss_computer_1776925166165.png'], stock: 10, sku: 'ZS-BP-GMT' }
+      { color: 'Black Matte', colorHex: '#1a1a1a', images: ['/img/products/zeiss_computer.png'], stock: 15, sku: 'ZS-BP-BLK' },
+      { color: 'Gunmetal', colorHex: '#636363', images: ['/img/products/zeiss_computer.png'], stock: 10, sku: 'ZS-BP-GMT' }
     ],
     features: ['Zeiss BlueGuard Technology', 'UV Protection Up to 400nm', 'DuraVision Platinum Coating', 'Anti-Reflection & Anti-Static'],
     description: 'Clinically proven Zeiss BlueGuard technology blocks up to 40% of blue light without color distortion.',
@@ -135,7 +135,7 @@ const sampleProducts = [
     price: 7500, comparePrice: 11000, discount: 32,
     slug: 'zeiss-titanium-classic-eyeglasses',
     variants: [
-      { color: 'Dark Gunmetal', colorHex: '#414A4C', images: ['/img/products/zeiss_computer_1776925166165.png'], stock: 8, sku: 'ZS-TI-GMT' }
+      { color: 'Dark Gunmetal', colorHex: '#414A4C', images: ['/img/products/zeiss_computer.png'], stock: 8, sku: 'ZS-TI-GMT' }
     ],
     features: ['Pure Titanium Frame', 'Featherweight Comfort', 'Zeiss Precision Optics', '2 Year Warranty'],
     description: 'German engineering meets Italian design. Zeiss Titanium frames for the discerning professional.',
@@ -151,8 +151,8 @@ const sampleProducts = [
     price: 1299, comparePrice: 2499, discount: 48,
     slug: 'vincent-chase-matte-black-classic',
     variants: [
-      { color: 'Matte Black', colorHex: '#1a1a1a', images: ['/img/products/vincent_chase_titanium_1776925184839.png'], stock: 45, sku: 'VC-001-MB' },
-      { color: 'Navy Blue', colorHex: '#000080', images: ['/img/products/vincent_chase_titanium_1776925184839.png'], stock: 30, sku: 'VC-001-NVY' }
+      { color: 'Matte Black', colorHex: '#1a1a1a', images: ['/img/products/vincent_chase_titanium.png'], stock: 45, sku: 'VC-001-MB' },
+      { color: 'Navy Blue', colorHex: '#000080', images: ['/img/products/vincent_chase_titanium.png'], stock: 30, sku: 'VC-001-NVY' }
     ],
     features: ['Lightweight TR90', 'Blue Cut Lens Compatible', '6 Months Warranty', 'Anti-Scratch Coating'],
     description: 'Premium rectangle frames with a sleek matte black finish. Perfect for everyday professional use.',
@@ -166,8 +166,8 @@ const sampleProducts = [
     price: 2499, comparePrice: 4499, discount: 44,
     slug: 'vincent-chase-rimless-elegance',
     variants: [
-      { color: 'Silver', colorHex: '#C0C0C0', images: ['/img/products/vincent_chase_titanium_1776925184839.png'], stock: 25, sku: 'VC-RIM-SLV' },
-      { color: 'Gold', colorHex: '#FFD700', images: ['/img/products/vincent_chase_titanium_1776925184839.png'], stock: 18, sku: 'VC-RIM-GLD' }
+      { color: 'Silver', colorHex: '#C0C0C0', images: ['/img/products/vincent_chase_titanium.png'], stock: 25, sku: 'VC-RIM-SLV' },
+      { color: 'Gold', colorHex: '#FFD700', images: ['/img/products/vincent_chase_titanium.png'], stock: 18, sku: 'VC-RIM-GLD' }
     ],
     features: ['Ultra-Light Titanium', 'Rimless Design', 'Spring Hinges', 'Adjustable Nose Pads'],
     description: 'Sleek, invisible-looking rimless frames for those who want vision correction without compromising their look.',
@@ -183,7 +183,7 @@ const sampleProducts = [
     price: 2199, comparePrice: 3999, discount: 45,
     slug: 'john-jacobs-rose-gold-rimless',
     variants: [
-      { color: 'Rose Gold', colorHex: '#B76E79', images: ['/img/products/johnjacobs_rosegold_1776925211587.png'], stock: 30, sku: 'JJ-001-RG' }
+      { color: 'Rose Gold', colorHex: '#B76E79', images: ['/img/products/johnjacobs_rosegold.png'], stock: 30, sku: 'JJ-001-RG' }
     ],
     features: ['Stainless Steel', 'Spring Hinge', 'Rimless Design', 'Adjustable Nose Pads'],
     description: 'Elegant rimless oval frames in a stunning rose gold finish. Ultra-lightweight for all-day comfort.',
@@ -197,8 +197,8 @@ const sampleProducts = [
     price: 3200, comparePrice: 5200, discount: 38,
     slug: 'john-jacobs-bold-acetate-round',
     variants: [
-      { color: 'Havana Brown', colorHex: '#804000', images: ['/img/products/johnjacobs_rosegold_1776925211587.png'], stock: 20, sku: 'JJ-RND-HVN' },
-      { color: 'Forest Green', colorHex: '#228B22', images: ['/img/products/johnjacobs_rosegold_1776925211587.png'], stock: 14, sku: 'JJ-RND-GRN' }
+      { color: 'Havana Brown', colorHex: '#804000', images: ['/img/products/johnjacobs_rosegold.png'], stock: 20, sku: 'JJ-RND-HVN' },
+      { color: 'Forest Green', colorHex: '#228B22', images: ['/img/products/johnjacobs_rosegold.png'], stock: 14, sku: 'JJ-RND-GRN' }
     ],
     features: ['Handcrafted Acetate', 'Bold Round Frame', 'Premium Hinges', 'Signature JJ Logo'],
     description: 'Statement round frames crafted from premium Italian acetate. A must-have for the fashion-forward individual.',
@@ -214,8 +214,8 @@ const sampleProducts = [
     price: 3499, comparePrice: 5999, discount: 42,
     slug: 'lenskart-air-signature-titanium',
     variants: [
-      { color: 'Silver', colorHex: '#C0C0C0', images: ['/img/products/lenskart_air_round_1776925241420.png'], stock: 25, sku: 'LK-AIR-SLV' },
-      { color: 'Gold', colorHex: '#FFD700', images: ['/img/products/lenskart_air_round_1776925241420.png'], stock: 18, sku: 'LK-AIR-GLD' }
+      { color: 'Silver', colorHex: '#C0C0C0', images: ['/img/products/lenskart_air_round.png'], stock: 25, sku: 'LK-AIR-SLV' },
+      { color: 'Gold', colorHex: '#FFD700', images: ['/img/products/lenskart_air_round.png'], stock: 18, sku: 'LK-AIR-GLD' }
     ],
     features: ['Pure Titanium', 'Hypoallergenic', 'Anti-Rust', '1 Year Warranty', 'Spring Hinge'],
     description: 'Ultra-light titanium frames — wear them all day without the pressure. The signature Lenskart Air experience.',
@@ -231,9 +231,9 @@ const sampleProducts = [
     price: 799, comparePrice: 1299, discount: 38,
     slug: 'kids-fun-purple-stars',
     variants: [
-      { color: 'Purple', colorHex: '#9B59B6', images: ['/img/products/kids_purple_round_1776925226059.png'], stock: 40, sku: 'VC-KIDS-PRP' },
-      { color: 'Red', colorHex: '#FF0000', images: ['/img/products/kids_purple_round_1776925226059.png'], stock: 35, sku: 'VC-KIDS-RED' },
-      { color: 'Blue', colorHex: '#0000FF', images: ['/img/products/kids_purple_round_1776925226059.png'], stock: 38, sku: 'VC-KIDS-BLU' }
+      { color: 'Purple', colorHex: '#9B59B6', images: ['/img/products/kids_purple_round.png'], stock: 40, sku: 'VC-KIDS-PRP' },
+      { color: 'Red', colorHex: '#FF0000', images: ['/img/products/kids_purple_round.png'], stock: 35, sku: 'VC-KIDS-RED' },
+      { color: 'Blue', colorHex: '#0000FF', images: ['/img/products/kids_purple_round.png'], stock: 38, sku: 'VC-KIDS-BLU' }
     ],
     features: ['Flexible TR90 Frame', 'Child-Safe Design', 'Anti-Scratch Lens', 'Spring Hinge'],
     description: 'Colorful, fun and flexible frames designed for active kids. Durable enough for school and play.',

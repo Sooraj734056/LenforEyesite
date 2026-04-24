@@ -125,9 +125,9 @@
 }
 .trustItems {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 24px 32px;
 }
 .trustItem { display: flex; align-items: center; gap: 12px; }
 .trustIcon { font-size: 1.5rem; flex-shrink: 0; }
@@ -214,7 +214,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 48px;
+  gap: 32px;
   flex-wrap: wrap;
 }
 .eyeTestContent { display: flex; align-items: flex-start; gap: 24px; flex: 1; }
@@ -275,13 +275,16 @@
   .twoCol { grid-template-columns: 1fr; gap: 32px; }
 }
 @media (max-width: 768px) {
-  .hero { min-height: 70vh; padding: 40px 16px; }
-  .heroTitle { font-size: 1.875rem; }
-  .categoryGrid { grid-template-columns: repeat(2, 1fr); }
-  .brands { grid-template-columns: repeat(2, 1fr); }
-  .eyeTestInner { flex-direction: column; }
-  .eyeTestContent { flex-direction: column; }
-  .trustItems { justify-content: flex-start; gap: 12px; }
+  .hero { min-height: 60vh; padding: 40px 16px; text-align: center; }
+  .heroContent { align-items: center; }
+  .heroTitle { font-size: 2rem; }
+  .heroSubtitle { font-size: 1rem; }
+  .categoryGrid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .brands { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .eyeTestInner { flex-direction: column; text-align: center; padding: 0 16px; }
+  .eyeTestContent { flex-direction: column; align-items: center; }
+  .eyeTestFeatures { justify-content: center; }
+  .trustItems { justify-content: center; gap: 16px; }
 }
 @media (max-width: 480px) {
   .categoryGrid { grid-template-columns: repeat(2, 1fr); }
