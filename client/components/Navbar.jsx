@@ -6,16 +6,21 @@ import useCartStore from '@/store/cartStore';
 import useAuthStore from '@/store/authStore';
 import { resolveMediaUrl } from '@/lib/media';
 import toast from 'react-hot-toast';
+import { 
+  FaGlasses, FaCrown, FaStar, FaLaptop, FaBook, FaEye, FaCalendarAlt, 
+  FaHeart, FaUser, FaBox, FaClipboardList, FaUserShield, FaSignOutAlt, FaSearch
+} from 'react-icons/fa';
+import { FiMenu, FiX, FiShoppingBag } from 'react-icons/fi';
 import styles from './Navbar.module.css';
 
 const categories = [
-  { label: 'Men', href: '/products?gender=Men', icon: '👓' },
-  { label: 'Women', href: '/products?gender=Women', icon: '👑' },
-  { label: 'Kids', href: '/products?category=Kids', icon: '🌟' },
-  { label: 'Computer Glasses', href: '/products?category=Computer+Glasses', icon: '💻' },
-  { label: 'Reading Glasses', href: '/products?category=Reading+Glasses', icon: '📚' },
-  { label: 'Contact Lenses', href: '/products?category=Contact+Lenses', icon: '👁️' },
-  { label: 'Sunglasses', href: '/products?category=Sunglasses', icon: '🕶️' },
+  { label: 'Men', href: '/products?gender=Men', icon: <FaGlasses /> },
+  { label: 'Women', href: '/products?gender=Women', icon: <FaCrown /> },
+  { label: 'Kids', href: '/products?category=Kids', icon: <FaStar /> },
+  { label: 'Computer Glasses', href: '/products?category=Computer+Glasses', icon: <FaLaptop /> },
+  { label: 'Reading Glasses', href: '/products?category=Reading+Glasses', icon: <FaBook /> },
+  { label: 'Contact Lenses', href: '/products?category=Contact+Lenses', icon: <FaEye /> },
+  { label: 'Sunglasses', href: '/products?category=Sunglasses', icon: <FaGlasses /> },
 ];
 
 export default function Navbar() {
@@ -193,7 +198,7 @@ export default function Navbar() {
             </div>
 
             <Link href="/contact#appointment" className={`${styles.navBtn} ${styles.appointmentBtn}`}>
-              📅 Eye Test
+              <FaCalendarAlt /> Eye Test
             </Link>
 
             {/* Wishlist */}
@@ -242,12 +247,12 @@ export default function Navbar() {
                 </button>
                 {userMenuOpen && (
                   <div className={styles.dropdownMenu} style={{ right: 0, left: 'auto' }}>
-                    <Link href="/account" className={styles.dropdownItem}>👤 My Account</Link>
-                    <Link href="/account/orders" className={styles.dropdownItem}>📦 My Orders</Link>
-                    <Link href="/account/prescriptions" className={styles.dropdownItem}>📋 Prescriptions</Link>
-                    {isAdminUser && <Link href="/admin" className={styles.dropdownItem}>⚙️ Admin Panel</Link>}
+                    <Link href="/account" className={styles.dropdownItem}><FaUser /> My Account</Link>
+                    <Link href="/account/orders" className={styles.dropdownItem}><FaBox /> My Orders</Link>
+                    <Link href="/account/prescriptions" className={styles.dropdownItem}><FaClipboardList /> Prescriptions</Link>
+                    {isAdminUser && <Link href="/admin" className={styles.dropdownItem}><FaUserShield /> Admin Panel</Link>}
                     <hr style={{ margin: '4px 0', borderColor: '#eee' }} />
-                    <button onClick={handleLogout} className={`${styles.dropdownItem} ${styles.logoutBtn}`}>🚪 Logout</button>
+                    <button onClick={handleLogout} className={`${styles.dropdownItem} ${styles.logoutBtn}`}><FaSignOutAlt /> Logout</button>
                   </div>
                 )}
               </div>
@@ -276,17 +281,17 @@ export default function Navbar() {
             <div className={styles.mobileLinks}>
               {categories.map(cat => (
                 <Link key={cat.href} href={cat.href} className={styles.mobileLink}>
-                  {cat.icon} {cat.label}
+                  <span className={styles.mobileIcon}>{cat.icon}</span> {cat.label}
                 </Link>
               ))}
-              <Link href="/contact#appointment" className={styles.mobileLink}>📅 Book Eye Test</Link>
-              <Link href="/account/wishlist" className={styles.mobileLink}>❤️ My Wishlist</Link>
+              <Link href="/contact#appointment" className={styles.mobileLink}><FaCalendarAlt /> Book Eye Test</Link>
+              <Link href="/account/wishlist" className={styles.mobileLink}><FaHeart /> My Wishlist</Link>
               {user ? (
                 <>
-                  <Link href="/account" className={styles.mobileLink}>👤 My Account</Link>
-                  <Link href="/account/orders" className={styles.mobileLink}>📦 Orders</Link>
-                  {isAdminUser && <Link href="/admin" className={styles.mobileLink}>⚙️ Admin</Link>}
-                  <button onClick={handleLogout} className={styles.mobileLink}>🚪 Logout</button>
+                  <Link href="/account" className={styles.mobileLink}><FaUser /> My Account</Link>
+                  <Link href="/account/orders" className={styles.mobileLink}><FaBox /> Orders</Link>
+                  {isAdminUser && <Link href="/admin" className={styles.mobileLink}><FaUserShield /> Admin</Link>}
+                  <button onClick={handleLogout} className={styles.mobileLink}><FaSignOutAlt /> Logout</button>
                 </>
               ) : (
                 <>

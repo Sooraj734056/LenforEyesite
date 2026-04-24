@@ -9,6 +9,10 @@ import CartDrawer from '@/components/CartDrawer';
 import LensConfigurator from '@/components/LensConfigurator';
 import ReviewForm from '@/components/ReviewForm';
 import RelatedProducts from '@/components/RelatedProducts';
+import { 
+  FaCheckCircle, FaTimesCircle, FaBinoculars, FaShoppingCart, FaCalendarAlt, 
+  FaTruck, FaSyncAlt, FaShieldAlt, FaMicroscope, FaStar, FaStarHalfAlt
+} from 'react-icons/fa';
 import styles from './page.module.css';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
@@ -189,7 +193,7 @@ export default function ProductDetailPage() {
             </div>
             {lensConfig && (
               <div className={styles.lensAdded}>
-                ✅ Lens added: {lensConfig.powerType} — {lensConfig.package} (+₹{lensConfig.price})
+                <FaCheckCircle /> Lens added: {lensConfig.powerType} — {lensConfig.package} (+₹{lensConfig.price})
                 <br/>
                 <strong>Total: ₹{totalPrice.toLocaleString('en-IN')}</strong>
               </div>
@@ -221,9 +225,9 @@ export default function ProductDetailPage() {
 
             {/* Stock Status */}
             {variant?.stock === 0 ? (
-              <div className={styles.outOfStock}>❌ Out of Stock</div>
+              <div className={styles.outOfStock}><FaTimesCircle /> Out of Stock</div>
             ) : (
-              <div className={styles.inStock}>✅ In Stock ({variant?.stock || 'Available'})</div>
+              <div className={styles.inStock}><FaCheckCircle /> In Stock ({variant?.stock || 'Available'})</div>
             )}
 
             {/* CTA Buttons */}
@@ -234,10 +238,10 @@ export default function ProductDetailPage() {
                 disabled={variant?.stock === 0}
                 id="add-to-cart-btn"
               >
-                {product.lensCompatible ? '🔭 Choose Lenses & Add' : '🛒 Add to Cart'}
+                {product.lensCompatible ? <><FaBinoculars /> Choose Lenses & Add</> : <><FaShoppingCart /> Add to Cart</>}
               </button>
               <Link href="/contact#appointment" className={`btn btn-outline btn-lg ${styles.tryStoreBtn}`}>
-                📅 Try in Store
+                <FaCalendarAlt /> Try in Store
               </Link>
             </div>
 
@@ -261,9 +265,10 @@ export default function ProductDetailPage() {
 
             {/* Service Badges */}
             <div className={styles.services}>
-              {['🚚 Free Delivery above ₹1000', '🔄 15-Day Return', '🛡️ 1-Year Warranty', '🔬 Genuine Product'].map(s => (
-                <span key={s} className={styles.serviceBadge}>{s}</span>
-              ))}
+              <div className={styles.serviceBadge}><FaTruck /> Free Delivery above ₹1000</div>
+              <div className={styles.serviceBadge}><FaSyncAlt /> 15-Day Return</div>
+              <div className={styles.serviceBadge}><FaShieldAlt /> 1-Year Warranty</div>
+              <div className={styles.serviceBadge}><FaMicroscope /> Genuine Product</div>
             </div>
           </div>
         </div>
@@ -289,7 +294,7 @@ export default function ProductDetailPage() {
             {tab === 'features' && (
               <ul className={styles.features}>
                 {product.features?.length > 0
-                  ? product.features.map((f, i) => <li key={i} className={styles.feature}>✅ {f}</li>)
+                  ? product.features.map((f, i) => <li key={i} className={styles.feature}><FaCheckCircle /> {f}</li>)
                   : <li className={styles.feature}>No specific features listed</li>
                 }
               </ul>

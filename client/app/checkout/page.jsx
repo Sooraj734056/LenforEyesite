@@ -6,6 +6,10 @@ import useAuthStore from '@/store/authStore';
 import { resolveMediaUrl } from '@/lib/media';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { 
+  FaMapMarkerAlt, FaTruck, FaCreditCard, FaCheckCircle, FaLock, 
+  FaBox, FaPhone, FaArrowRight, FaArrowLeft 
+} from 'react-icons/fa';
 import Link from 'next/link';
 import styles from './page.module.css';
 
@@ -239,7 +243,7 @@ export default function CheckoutPage() {
             {/* Step 0: Address */}
             {step === 0 && (
               <div className={styles.formCard}>
-                <h2 className={styles.formTitle}>📍 Delivery Address</h2>
+                <h2 className={styles.formTitle}><FaMapMarkerAlt /> Delivery Address</h2>
                 <div className={styles.formGrid}>
                   <div className="form-group">
                     <label className="form-label">Full Name *</label>
@@ -281,7 +285,7 @@ export default function CheckoutPage() {
             {/* Step 1: Shipping */}
             {step === 1 && (
               <div className={styles.formCard}>
-                <h2 className={styles.formTitle}>🚚 Shipping Method</h2>
+                <h2 className={styles.formTitle}><FaTruck /> Shipping Method</h2>
                 <div className={styles.shippingOptions}>
                   <div className={`${styles.shippingOpt} ${styles.shippingOptActive}`}>
                     <div className={styles.shippingInfo}>
@@ -308,7 +312,7 @@ export default function CheckoutPage() {
             {/* Step 2: Payment */}
             {step === 2 && (
               <div className={styles.formCard}>
-                <h2 className={styles.formTitle}>💳 Payment</h2>
+                <h2 className={styles.formTitle}><FaCreditCard /> Payment</h2>
 
                 {/* Coupon */}
                 <div className={styles.couponWrap}>
@@ -316,7 +320,7 @@ export default function CheckoutPage() {
                     onChange={e => setCouponCode(e.target.value.toUpperCase())} style={{ flex: 1 }} id="coupon-input" />
                   <button className="btn btn-outline" onClick={applyCoupon} id="apply-coupon">Apply</button>
                 </div>
-                {couponApplied && <div className={styles.couponSuccess}>✅ Coupon "{couponApplied}" applied. You save ₹{couponDiscount}!</div>}
+                {couponApplied && <div className={styles.couponSuccess}><FaCheckCircle /> Coupon "{couponApplied}" applied. You save ₹{couponDiscount}!</div>}
 
                 {/* Payment Methods */}
                 <div className={styles.paymentMethods}>
@@ -356,9 +360,9 @@ export default function CheckoutPage() {
 
                 <div className={styles.razorpayNote}>
                   {paymentMethod === 'Razorpay' ? (
-                    <>🔒 Secured by Razorpay. Your payment info is encrypted and never stored.</>
+                    <><FaLock /> Secured by Razorpay. Your payment info is encrypted and never stored.</>
                   ) : (
-                    <>📦 ₹49 COD handling fee will be added to your total.</>
+                    <><FaBox /> ₹49 COD handling fee will be added to your total.</>
                   )}
                 </div>
 
@@ -410,11 +414,11 @@ export default function CheckoutPage() {
             {/* Address Summary */}
             {step > 0 && (
               <div className={`${styles.summaryCard} ${styles.addrSummary}`}>
-                <h4>📍 Delivery To</h4>
+                <h4><FaMapMarkerAlt /> Delivery To</h4>
                 <p>{address.fullName}</p>
                 <p>{address.line1}{address.line2 ? `, ${address.line2}` : ''}</p>
                 <p>{address.city}, {address.state} - {address.pincode}</p>
-                <p>📞 {address.phone}</p>
+                <p><FaPhone /> {address.phone}</p>
                 <button className={styles.editAddr} onClick={() => setStep(0)}>Edit</button>
               </div>
             )}

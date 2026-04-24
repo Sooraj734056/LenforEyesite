@@ -2,18 +2,22 @@
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
-
+import { 
+  FaGlasses, FaGem, FaStar, FaLaptop, FaBook, FaEye, FaMedal, FaTruck, 
+  FaSearch, FaSyncAlt, FaShieldAlt, FaCreditCard, FaHome, FaMagic, 
+  FaTv, FaSun, FaBinoculars, FaCalendarAlt, FaCheckCircle
+} from 'react-icons/fa';
 import styles from './page.module.css';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 const CATEGORIES = [
-  { name: 'Men', icon: '👓', color: '#0057A8', href: '/products?gender=Men' },
-  { name: 'Women', icon: '💎', color: '#E91E8C', href: '/products?gender=Women' },
-  { name: 'Kids', icon: '⭐', color: '#FF9800', href: '/products?category=Kids' },
-  { name: 'Computer Glasses', icon: '💻', color: '#00AEEF', href: '/products?category=Computer+Glasses' },
-  { name: 'Reading Glasses', icon: '📚', color: '#4CAF50', href: '/products?category=Reading+Glasses' },
-  { name: 'Contact Lenses', icon: '👁️', color: '#9C27B0', href: '/products?category=Contact+Lenses' },
+  { name: 'Men', icon: <FaGlasses />, color: '#0057A8', href: '/products?gender=Men' },
+  { name: 'Women', icon: <FaGem />, color: '#E91E8C', href: '/products?gender=Women' },
+  { name: 'Kids', icon: <FaStar />, color: '#FF9800', href: '/products?category=Kids' },
+  { name: 'Computer Glasses', icon: <FaLaptop />, color: '#00AEEF', href: '/products?category=Computer+Glasses' },
+  { name: 'Reading Glasses', icon: <FaBook />, color: '#4CAF50', href: '/products?category=Reading+Glasses' },
+  { name: 'Contact Lenses', icon: <FaEye />, color: '#9C27B0', href: '/products?category=Contact+Lenses' },
 ];
 
 const HERO_SLIDES = [
@@ -111,21 +115,21 @@ export default function HomePage() {
         {/* Floating Cards */}
         <div className={styles.heroVisual}>
           <div className={styles.heroCard} style={{ animationDelay: '0s' }}>
-            <span className={styles.heroCardIcon}>🏅</span>
+            <span className={styles.heroCardIcon}><FaMedal /></span>
             <div>
               <div className={styles.heroCardTitle}>Trusted by 10,000+</div>
               <div className={styles.heroCardSub}>Happy customers</div>
             </div>
           </div>
           <div className={styles.heroCard} style={{ animationDelay: '0.5s' }}>
-            <span className={styles.heroCardIcon}>👁️</span>
+            <span className={styles.heroCardIcon}><FaEye /></span>
             <div>
               <div className={styles.heroCardTitle}>Expert Eye Tests</div>
               <div className={styles.heroCardSub}>At your home</div>
             </div>
           </div>
           <div className={styles.heroCard} style={{ animationDelay: '1s' }}>
-            <span className={styles.heroCardIcon}>🚚</span>
+            <span className={styles.heroCardIcon}><FaTruck /></span>
             <div>
               <div className={styles.heroCardTitle}>Free Delivery</div>
               <div className={styles.heroCardSub}>Orders above ₹1000</div>
@@ -144,11 +148,11 @@ export default function HomePage() {
         <div className="container">
           <div className={styles.trustItems}>
             {[
-              { icon: '🔍', text: 'Free Eye Checkup', sub: 'Expert optometrists' },
-              { icon: '🚚', text: 'Free Delivery', sub: 'On orders ₹1000+' },
-              { icon: '🔄', text: '15-Day Returns', sub: 'Hassle-free policy' },
-              { icon: '🛡️', text: '1-Year Warranty', sub: 'On all frames' },
-              { icon: '💳', text: 'Easy EMI', sub: 'No-cost EMI available' },
+              { icon: <FaSearch />, text: 'Free Eye Checkup', sub: 'Expert optometrists' },
+              { icon: <FaTruck />, text: 'Free Delivery', sub: 'On orders ₹1000+' },
+              { icon: <FaSyncAlt />, text: '15-Day Returns', sub: 'Hassle-free policy' },
+              { icon: <FaShieldAlt />, text: '1-Year Warranty', sub: 'On all frames' },
+              { icon: <FaCreditCard />, text: 'Easy EMI', sub: 'No-cost EMI available' },
             ].map((t, i) => (
               <div key={i} className={styles.trustItem}>
                 <span className={styles.trustIcon}>{t.icon}</span>
@@ -176,7 +180,7 @@ export default function HomePage() {
             {CATEGORIES.map(cat => (
               <Link key={cat.name} href={cat.href} className={styles.categoryCard} id={`cat-${cat.name.toLowerCase().replace(/\s/g, '-')}`}>
                 <div className={styles.categoryIcon} style={{ background: `${cat.color}18`, borderColor: `${cat.color}33` }}>
-                  <span style={{ fontSize: '2rem' }}>{cat.icon}</span>
+                  <span style={{ fontSize: '1.8rem', color: cat.color, display: 'flex', alignItems: 'center' }}>{cat.icon}</span>
                 </div>
                 <span className={styles.categoryName}>{cat.name}</span>
                 <div className={styles.categoryArrow} style={{ color: cat.color }}>→</div>
@@ -274,20 +278,25 @@ export default function HomePage() {
         <div className="container">
           <div className={styles.eyeTestInner}>
             <div className={styles.eyeTestContent}>
-              <span className={styles.eyeTestEmoji}>🏠</span>
+              <span className={styles.eyeTestEmoji}><FaHome /></span>
               <div>
                 <h2>Free Home Eye Test in Jaipur</h2>
                 <p>Our certified optometrists come to your doorstep. No hospitals, no queues.</p>
                 <div className={styles.eyeTestFeatures}>
-                  {['✅ Free of charge', '✅ Raja Park & nearby areas', '✅ Get prescription instantly', '✅ Same-day frame selection'].map(f => (
-                    <span key={f} className={styles.eyeTestFeature}>{f}</span>
+                  {[
+                    <><FaCheckCircle /> Free of charge</>, 
+                    <><FaCheckCircle /> Raja Park & nearby areas</>, 
+                    <><FaCheckCircle /> Get prescription instantly</>, 
+                    <><FaCheckCircle /> Same-day frame selection</>
+                  ].map((f, i) => (
+                    <span key={i} className={styles.eyeTestFeature}>{f}</span>
                   ))}
                 </div>
               </div>
             </div>
             <div className={styles.eyeTestAction}>
               <Link href="/contact#appointment" className="btn btn-white btn-lg" id="home-eye-test-cta">
-                📅 Book Free Appointment
+                <FaCalendarAlt /> Book Free Appointment
               </Link>
               <a href="https://wa.me/919999999999?text=Hi, I want to book a home eye test." className={styles.whatsappBtn} target="_blank" rel="noreferrer" id="whatsapp-cta">
                 <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
@@ -311,10 +320,10 @@ export default function HomePage() {
           </div>
           <div className="grid grid-4">
             {[
-              { name: 'Basic Anti-Glare', icon: '✨', price: 'From ₹499', desc: 'Reduces glare from lights, great for driving and office use.' },
-              { name: 'Blue Cut', icon: '💙', price: 'From ₹799', desc: 'Blocks harmful blue light from screens. Perfect for all-day computer users.' },
-              { name: 'Photochromic', icon: '☀️', price: 'From ₹1299', desc: 'Turns dark in sunlight, clear indoors. 2-in-1 convenience.' },
-              { name: 'Progressive', icon: '🔭', price: 'From ₹2499', desc: 'Multi-focal lenses for presbyopia — see near, far, and in-between.' },
+              { name: 'Basic Anti-Glare', icon: <FaMagic />, price: 'From ₹499', desc: 'Reduces glare from lights, great for driving and office use.' },
+              { name: 'Blue Cut', icon: <FaTv />, price: 'From ₹799', desc: 'Blocks harmful blue light from screens. Perfect for all-day computer users.' },
+              { name: 'Photochromic', icon: <FaSun />, price: 'From ₹1299', desc: 'Turns dark in sunlight, clear indoors. 2-in-1 convenience.' },
+              { name: 'Progressive', icon: <FaBinoculars />, price: 'From ₹2499', desc: 'Multi-focal lenses for presbyopia — see near, far, and in-between.' },
             ].map(lens => (
               <div key={lens.name} className={styles.lensCard} id={`lens-${lens.name.toLowerCase().replace(/\s/g, '-')}`}>
                 <div className={styles.lensIcon}>{lens.icon}</div>
