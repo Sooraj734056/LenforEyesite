@@ -241,15 +241,7 @@ export default function ProductDetailPage() {
               </Link>
             </div>
 
-            {/* Virtual Try On */}
-            <div className={styles.tryOnBanner}>
-              <span>👓</span>
-              <div>
-                <div className={styles.tryOnTitle}>Virtual Try-On Available</div>
-                <div className={styles.tryOnSub}>See how these frames look on your face</div>
-              </div>
-              <Link href={`/product/${id}/try-on`} className={styles.tryOnBtn} id="virtual-try-on-btn">Try Now →</Link>
-            </div>
+
 
             {/* Product Specs */}
             <div className={styles.specGrid}>
