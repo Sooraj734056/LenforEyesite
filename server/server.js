@@ -17,8 +17,23 @@ const limiter = rateLimit({
 app.use('/api/', limiter);
 
 // ─── Middleware ──────────────────────────────────────────────────────────────
+const allowedOrigins = [
+  (process.env.CLIENT_URL || 'http://localhost:3000').replace(/\/$/, ''),
+  'https://lenfor-eyesite-5p5e5t70s-surajs-projects-ecfa77d1.vercel.app',
+  'https://lenfor-eyesite-fmr2xm0bo-surajs-projects-ecfa77d1.vercel.app',
+  'https://lenfor-eyesite.vercel.app'
+];
+
 app.use(cors({
-  origin: (process.env.CLIENT_URL || 'http://localhost:3000').replace(/\/$/, ''),
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
