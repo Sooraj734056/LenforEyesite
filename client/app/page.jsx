@@ -85,7 +85,7 @@ export default function HomePage() {
       <section
         className={styles.hero}
         style={{
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.5)), url(${slide.bgImage})`,
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.25)), url(${slide.bgImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center'
         }}

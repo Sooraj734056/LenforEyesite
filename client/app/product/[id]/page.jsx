@@ -247,28 +247,28 @@ export default function ProductDetailPage() {
 
 
 
-            {/* Product Specs */}
-            <div className={styles.specGrid}>
-              {[
-                ['Shape', product.frameShape],
-                ['Material', product.frameMaterial],
-                ['Width', product.frameWidth],
-                ['Gender', product.gender],
-                ['Category', product.category],
-              ].map(([k, v]) => (
-                <div key={k} className={styles.spec}>
-                  <span className={styles.specKey}>{k}</span>
-                  <span className={styles.specVal}>{v}</span>
-                </div>
-              ))}
-            </div>
-
             {/* Service Badges */}
             <div className={styles.services}>
               <div className={styles.serviceBadge}><FaTruck /> Free Delivery above ₹1000</div>
               <div className={styles.serviceBadge}><FaSyncAlt /> 15-Day Return</div>
               <div className={styles.serviceBadge}><FaShieldAlt /> 1-Year Warranty</div>
               <div className={styles.serviceBadge}><FaMicroscope /> Genuine Product</div>
+            </div>
+
+            {/* Product Specs */}
+            <div className={styles.specGrid}>
+              {[
+                { k: 'Shape', v: product.frameShape },
+                { k: 'Material', v: product.frameMaterial },
+                { k: 'Width', v: product.frameWidth },
+                { k: 'Gender', v: product.gender },
+                { k: 'Category', v: product.category },
+              ].map(item => (
+                <div key={item.k} className={styles.spec}>
+                  <span className={styles.specKey}>{item.k}</span>
+                  <span className={styles.specVal}>{item.v}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>

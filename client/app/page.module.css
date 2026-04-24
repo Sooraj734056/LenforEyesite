@@ -1,12 +1,15 @@
-/* ─── HERO ─── */
 .hero {
-  min-height: 85vh;
+  min-height: 600px;
+  max-height: 750px;
   display: flex;
   align-items: center;
   position: relative;
   overflow: hidden;
-  padding: 60px 24px;
-  transition: background 0.8s ease-in-out;
+  padding: 80px 24px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: background 1s ease-in-out;
 }
 .heroContent {
   max-width: var(--container);
@@ -275,7 +278,7 @@
   .twoCol { grid-template-columns: 1fr; gap: 32px; }
 }
 @media (max-width: 768px) {
-  .hero { min-height: 60vh; padding: 40px 16px; text-align: center; }
+  .hero { min-height: 450px; padding: 60px 16px; text-align: center; }
   .heroContent { align-items: center; }
   .heroTitle { font-size: 2rem; }
   .heroSubtitle { font-size: 1rem; }
