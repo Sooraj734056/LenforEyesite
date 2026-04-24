@@ -1,3 +1,4 @@
+import { FaGlasses, FaSmile, FaCalendarAlt, FaStar } from 'react-icons/fa';
 export const metadata = { title: 'About Us | Lens For Eyesight — Jaipur' };
 
 export default function AboutPage() {
@@ -27,7 +28,7 @@ export default function AboutPage() {
             </p>
           </div>
           <div style={{ background: 'var(--gradient-primary)', borderRadius: 'var(--radius-xl)', padding: 48, textAlign: 'center', color: 'white' }}>
-            <div style={{ fontSize: '3rem', marginBottom: 16 }}>👓</div>
+            <div style={{ fontSize: '3rem', marginBottom: 16, color: 'white' }}><FaGlasses /></div>
             <h3 style={{ color: 'white', marginBottom: 8 }}>Our Mission</h3>
             <p style={{ color: 'rgba(255,255,255,0.85)', lineHeight: 1.7 }}>
               To make quality eye care and premium eyewear accessible to every family in Jaipur, backed by expert guidance and honest pricing.
@@ -39,13 +40,13 @@ export default function AboutPage() {
         <section style={{ padding: '0 0 64px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
             {[
-              { num: '10,000+', label: 'Happy Customers', icon: '😊' },
-              { num: '500+', label: 'Frame Styles', icon: '👓' },
-              { num: '6+', label: 'Years of Experience', icon: '📅' },
-              { num: '100%', label: 'Customer Satisfaction', icon: '⭐' },
+              { num: '10,000+', label: 'Happy Customers', icon: <FaSmile /> },
+              { num: '500+', label: 'Frame Styles', icon: <FaGlasses /> },
+              { num: '6+', label: 'Years of Experience', icon: <FaCalendarAlt /> },
+              { num: '100%', label: 'Customer Satisfaction', icon: <FaStar /> },
             ].map(s => (
               <div key={s.label} style={{ background: 'white', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: 28, textAlign: 'center' }}>
-                <div style={{ fontSize: '2rem', marginBottom: 8 }}>{s.icon}</div>
+                <div style={{ fontSize: '2rem', marginBottom: 8, color: 'var(--primary)', display: 'flex', justifyContent: 'center' }}>{s.icon}</div>
                 <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--primary)', marginBottom: 4 }}>{s.num}</div>
                 <div style={{ fontSize: '0.875rem', color: 'var(--gray-mid)' }}>{s.label}</div>
               </div>

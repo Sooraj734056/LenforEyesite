@@ -54,13 +54,7 @@
   border: none; cursor: pointer; transition: var(--transition);
 }
 .quickAdd:hover, .adding { background: var(--success); }
-.tryOn {
-  padding: 8px 12px; border-radius: var(--radius-full);
-  background: white; color: var(--black);
-  font-size: 0.8rem; font-weight: 600;
-  transition: var(--transition); display: flex; align-items: center; gap: 4px;
-}
-.tryOn:hover { background: var(--primary); color: white; }
+
 
 /* Swatches */
 .swatches {

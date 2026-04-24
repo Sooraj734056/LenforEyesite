@@ -6,6 +6,7 @@ import useAuthStore from '@/store/authStore';
 import useWishlistStore from '@/store/wishlistStore';
 import { resolveMediaUrl } from '@/lib/media';
 import toast from 'react-hot-toast';
+import { FaShoppingCart } from 'react-icons/fa';
 import styles from './ProductCard.module.css';
 
 export default function ProductCard({ product }) {
@@ -66,11 +67,8 @@ export default function ProductCard({ product }) {
         {/* Quick Add Overlay */}
         <div className={styles.overlay}>
           <button className={`${styles.quickAdd} ${addingCart ? styles.adding : ''}`} onClick={handleAddToCart} id={`add-cart-${product._id}`}>
-            {addingCart ? '✓ Added!' : '🛒 Add to Cart'}
+            {addingCart ? '✓ Added!' : <><FaShoppingCart /> Add to Cart</>}
           </button>
-          <Link href={`/product/${product._id}`} className={styles.tryOn} onClick={e => e.stopPropagation()}>
-            👓 Try On
-          </Link>
         </div>
       </div>
 

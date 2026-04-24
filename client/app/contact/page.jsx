@@ -1,4 +1,5 @@
 import ContactForm from '@/components/ContactForm';
+import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaClock, FaCalendarAlt } from 'react-icons/fa';
 import styles from './page.module.css';
 
 export const metadata = {
@@ -21,10 +22,10 @@ export default function ContactPage() {
         {/* Info Cards */}
         <section className={styles.infoGrid}>
           {[
-            { icon: '📍', title: 'Visit Our Store', details: ['Shop 14, Raja Park Main Road', 'Jaipur - 302004, Rajasthan', 'Near Kesariya Restaurant'] },
-            { icon: '📞', title: 'Call / WhatsApp', details: ['+91 99999 99999', '+91 88888 88888', 'Available 10 AM – 8 PM'] },
-            { icon: '✉️', title: 'Email Us', details: ['info@lensforeyesight.com', 'orders@lensforeyesight.com', 'Reply within 24 hours'] },
-            { icon: '🕐', title: 'Store Hours', details: ['Mon – Sat: 10:00 AM – 8:00 PM', 'Sunday: 11:00 AM – 6:00 PM', 'Holidays: Check WhatsApp'] },
+            { icon: <FaMapMarkerAlt />, title: 'Visit Our Store', details: ['Shop 14, Raja Park Main Road', 'Jaipur - 302004, Rajasthan', 'Near Kesariya Restaurant'] },
+            { icon: <FaPhoneAlt />, title: 'Call / WhatsApp', details: ['+91 99999 99999', '+91 88888 88888', 'Available 10 AM – 8 PM'] },
+            { icon: <FaEnvelope />, title: 'Email Us', details: ['info@lensforeyesight.com', 'orders@lensforeyesight.com', 'Reply within 24 hours'] },
+            { icon: <FaClock />, title: 'Store Hours', details: ['Mon – Sat: 10:00 AM – 8:00 PM', 'Sunday: 11:00 AM – 6:00 PM', 'Holidays: Check WhatsApp'] },
           ].map(card => (
             <div key={card.title} className={styles.infoCard}>
               <div className={styles.cardIcon}>{card.icon}</div>
@@ -39,7 +40,7 @@ export default function ContactPage() {
           <div className={styles.contactGrid}>
             {/* Booking Form */}
             <div className={styles.bookingCard}>
-              <h2>📅 Book Free Home Eye Test</h2>
+              <h2><FaCalendarAlt /> Book Free Home Eye Test</h2>
               <p>Our certified optometrist will visit your home in Jaipur. 100% free of charge!</p>
               <ContactForm />
             </div>
@@ -56,7 +57,7 @@ export default function ContactPage() {
               />
               <div className={styles.mapOverlay}>
                 <div className={styles.mapInfo}>
-                  <strong>📍 Lens For Eyesight</strong>
+                  <strong><FaMapMarkerAlt /> Lens For Eyesight</strong>
                   <span>Raja Park, Jaipur</span>
                   <a href="https://maps.google.com/?q=Raja+Park+Jaipur" target="_blank" rel="noreferrer" className={styles.mapLink}>
                     Open in Google Maps →

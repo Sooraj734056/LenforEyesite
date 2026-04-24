@@ -229,7 +229,7 @@ export default function CheckoutPage() {
           {STEPS.map((s, i) => (
             <div key={s} className={styles.stepItem}>
               <div className={`${styles.stepCircle} ${i < step ? styles.done : i === step ? styles.active : ''}`}>
-                {i < step ? '✓' : i + 1}
+                {i < step ? <FaCheckCircle /> : i + 1}
               </div>
               <span className={`${styles.stepName} ${i === step ? styles.stepNameActive : ''}`}>{s}</span>
               {i < STEPS.length - 1 && <div className={`${styles.stepLine} ${i < step ? styles.lineFilled : ''}`} />}
@@ -336,7 +336,7 @@ export default function CheckoutPage() {
                       <div className={styles.payMethodTitle}>Pay Online (Safe & Secure)</div>
                       <div className={styles.payMethodDesc}>UPI, Cards, Net Banking, Wallets</div>
                     </div>
-                    <div className={styles.payMethodIcons}>
+                    <div className={styles.payMethodIcons} style={{ pointerEvents: 'none' }}>
                       <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo.png" alt="UPI" height="12" />
                       <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" alt="Visa" height="10" />
                     </div>
