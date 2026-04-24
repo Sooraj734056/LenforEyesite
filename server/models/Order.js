@@ -60,8 +60,8 @@ const OrderSchema = new mongoose.Schema({
 
   status: {
     type: String,
-    enum: ['Payment Received', 'Prescription Verified', 'Lab Processing', 'Quality Check', 'Shipped', 'Delivered', 'Cancelled', 'Return Requested'],
-    default: 'Payment Received'
+    enum: ['Order Placed', 'Payment Received', 'Prescription Verified', 'Lab Processing', 'Quality Check', 'Shipped', 'Delivered', 'Cancelled', 'Return Requested'],
+    default: 'Order Placed'
   },
   statusHistory: [StatusHistorySchema],
 

@@ -23,6 +23,7 @@ export default function CheckoutPage() {
   const [couponCode, setCouponCode] = useState('');
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [couponApplied, setCouponApplied] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState('Razorpay'); // 'Razorpay' or 'COD'
 
   const [address, setAddress] = useState({
     fullName: user?.name || '', phone: user?.phone || '',
@@ -75,6 +76,30 @@ export default function CheckoutPage() {
   const handlePayment = async () => {
     setLoading(true);
     try {
+      // HANDLE COD (Cash on Delivery)
+      if (paymentMethod === 'COD') {
+        const orderItems = items.map(item => ({
+          product: item.productId,
+          quantity: item.quantity,
+          price: item.price,
+          lens: item.lens,
+          variant: { color: item.variantColor },
+          image: item.image
+        }));
+
+        const { data: orderData } = await axios.post(`${API}/orders`, {
+          items: orderItems,
+          shippingAddress: address,
+          couponCode: couponApplied,
+          paymentMethod: 'COD'
+        }, { headers: { Authorization: `Bearer ${token}` } });
+
+        clearCart();
+        toast.success('🎉 Order placed successfully (COD)!');
+        router.push(`/account/orders?success=true&order=${orderData.order.orderNumber}`);
+        return;
+      }
+
       // Create Razorpay order on server
       const { data: rzpData } = await axios.post(`${API}/payments/create-order`, { amount: total },
         { headers: { Authorization: `Bearer ${token}` } });
@@ -295,26 +320,53 @@ export default function CheckoutPage() {
 
                 {/* Payment Methods */}
                 <div className={styles.paymentMethods}>
-                  <div className={styles.payMethod}>
-                    <span>📱</span><span>UPI (Google Pay, PhonePe, Paytm)</span>
+                  <div 
+                    className={`${styles.payMethod} ${paymentMethod === 'Razorpay' ? styles.payMethodActive : ''}`}
+                    onClick={() => setPaymentMethod('Razorpay')}
+                    id="pay-online"
+                  >
+                    <div className={styles.payMethodCheck}>
+                      <div className={styles.checkCircle}>{paymentMethod === 'Razorpay' && <div className={styles.checkDot} />}</div>
+                    </div>
+                    <div className={styles.payMethodInfo}>
+                      <div className={styles.payMethodTitle}>Pay Online (Safe & Secure)</div>
+                      <div className={styles.payMethodDesc}>UPI, Cards, Net Banking, Wallets</div>
+                    </div>
+                    <div className={styles.payMethodIcons}>
+                      <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo.png" alt="UPI" height="12" />
+                      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" alt="Visa" height="10" />
+                    </div>
                   </div>
-                  <div className={styles.payMethod}>
-                    <span>💳</span><span>Debit / Credit Card (Visa, Mastercard, RuPay)</span>
-                  </div>
-                  <div className={styles.payMethod}>
-                    <span>🏦</span><span>Net Banking (All major banks)</span>
+
+                  <div 
+                    className={`${styles.payMethod} ${paymentMethod === 'COD' ? styles.payMethodActive : ''}`}
+                    onClick={() => setPaymentMethod('COD')}
+                    id="pay-cod"
+                  >
+                    <div className={styles.payMethodCheck}>
+                      <div className={styles.checkCircle}>{paymentMethod === 'COD' && <div className={styles.checkDot} />}</div>
+                    </div>
+                    <div className={styles.payMethodInfo}>
+                      <div className={styles.payMethodTitle}>Cash on Delivery (COD)</div>
+                      <div className={styles.payMethodDesc}>Pay when your order arrives at your door</div>
+                    </div>
+                    <div className={styles.payMethodPrice}>+ ₹49 fee</div>
                   </div>
                 </div>
 
                 <div className={styles.razorpayNote}>
-                  🔒 Secured by Razorpay. Your payment info is encrypted and never stored.
+                  {paymentMethod === 'Razorpay' ? (
+                    <>🔒 Secured by Razorpay. Your payment info is encrypted and never stored.</>
+                  ) : (
+                    <>📦 ₹49 COD handling fee will be added to your total.</>
+                  )}
                 </div>
 
                 <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
                   <button className="btn btn-outline" onClick={() => setStep(1)}>← Back</button>
                   <button className="btn btn-primary btn-lg" onClick={handlePayment} disabled={loading}
                     style={{ flex: 1 }} id="pay-btn">
-                    {loading ? 'Processing...' : `Pay ₹${total.toLocaleString('en-IN')} →`}
+                    {loading ? 'Processing...' : paymentMethod === 'COD' ? `Confirm COD Order (₹${(total + 49).toLocaleString('en-IN')}) →` : `Pay ₹${total.toLocaleString('en-IN')} →`}
                   </button>
                 </div>
               </div>

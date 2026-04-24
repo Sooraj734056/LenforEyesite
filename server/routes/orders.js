@@ -65,7 +65,11 @@ router.post('/', protect, async (req, res) => {
       couponCode: couponApplied,
       paymentMethod: paymentMethod || 'Razorpay',
       razorpayOrderId,
-      statusHistory: [{ status: 'Payment Received', note: 'Order placed successfully' }]
+      status: paymentMethod === 'COD' ? 'Order Placed' : 'Order Placed',
+      statusHistory: [{ 
+        status: 'Order Placed', 
+        note: paymentMethod === 'COD' ? 'Order placed with Cash on Delivery' : 'Order placed, awaiting payment verification' 
+      }]
     });
 
     // Award loyalty points to user
