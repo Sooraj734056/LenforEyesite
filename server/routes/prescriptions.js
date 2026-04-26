@@ -19,11 +19,64 @@ const upload = multer({ storage, limits: { fileSize: 10 * 1024 * 1024 }, fileFil
   else cb(new Error('Only image files are allowed'));
 }});
 
+const User = require('../models/User');
+
 // POST /api/prescriptions/upload
 router.post('/upload', protect, upload.single('prescription'), (req, res) => {
   if (!req.file) return res.status(400).json({ success: false, message: 'No file uploaded.' });
   const url = `/uploads/prescriptions/${req.file.filename}`;
   res.json({ success: true, url, message: 'Prescription uploaded successfully.' });
+});
+
+// GET /api/prescriptions/vault — Get all family members and prescriptions
+router.get('/vault', protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select('familyMembers');
+    res.json({ success: true, familyMembers: user.familyMembers });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// POST /api/prescriptions/family — Add a family member
+router.post('/family', protect, async (req, res) => {
+  try {
+    const { name, relation } = req.body;
+    const user = await User.findById(req.user._id);
+    user.familyMembers.push({ name, relation, prescriptions: [] });
+    await user.save();
+    res.json({ success: true, familyMembers: user.familyMembers });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// POST /api/prescriptions/save — Save prescription to a member
+router.post('/save', protect, async (req, res) => {
+  try {
+    const { memberId, rightEye, leftEye, pupillaryDistance, uploadedPhoto } = req.body;
+    const user = await User.findById(req.user._id);
+    const member = user.familyMembers.id(memberId);
+    if (!member) return res.status(404).json({ success: false, message: 'Member not found' });
+    
+    member.prescriptions.push({ rightEye, leftEye, pupillaryDistance, uploadedPhoto });
+    await user.save();
+    res.json({ success: true, member });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// DELETE /api/prescriptions/member/:id — Delete a family member
+router.delete('/member/:id', protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    user.familyMembers = user.familyMembers.filter(m => m._id.toString() !== req.params.id);
+    await user.save();
+    res.json({ success: true, familyMembers: user.familyMembers });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
 });
 
 module.exports = router;

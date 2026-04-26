@@ -6,6 +6,8 @@ import CartDrawer from '@/components/CartDrawer';
 
 import AdminClassHandler from '@/components/AdminClassHandler';
 import WhatsAppButton from '@/components/WhatsAppButton';
+import AuthInitializer from '@/components/AuthInitializer';
+import WishlistSync from '@/components/WishlistSync';
 
 export const metadata = {
   title: {
@@ -39,6 +41,8 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
+        <AuthInitializer />
+        <WishlistSync />
         <AdminClassHandler />
 
         <Navbar />

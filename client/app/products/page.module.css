@@ -2,11 +2,27 @@
 .plpHeader h1 { font-size: 1.75rem; font-weight: 800; }
 .plpHeader p { color: var(--gray-mid); }
 
-.plpLayout { display: grid; grid-template-columns: 280px 1fr; gap: 32px; padding-bottom: 64px; }
-.desktopSidebar {}
+.plpLayout { 
+  display: grid; 
+  grid-template-columns: 280px 1fr; 
+  gap: 32px; 
+  padding-bottom: 64px; 
+  align-items: flex-start; /* Important for sticky */
+}
+.desktopSidebar { position: relative; height: 100%; }
 
 /* Sidebar */
-.sidebar { position: sticky; top: 120px; background: white; border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 20px; height: fit-content; max-height: calc(100vh - 130px); overflow-y: auto; }
+.sidebar { 
+  position: sticky; 
+  top: 100px; /* nav-height (80px) + 20px gap */
+  background: white; 
+  border-radius: var(--radius-lg); 
+  border: 1px solid var(--border); 
+  padding: 24px; 
+  max-height: calc(100vh - 130px); 
+  overflow-y: auto; 
+  z-index: 10;
+}
 .sidebarHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
 .sidebarHeader h3 { font-size: 1rem; font-weight: 700; }
 .clearBtn { font-size: 0.8rem; color: var(--primary); font-weight: 600; background: none; border: none; cursor: pointer; }

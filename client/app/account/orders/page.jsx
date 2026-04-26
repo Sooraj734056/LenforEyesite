@@ -5,17 +5,22 @@ import useAuthStore from '@/store/authStore';
 import { resolveMediaUrl } from '@/lib/media';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  FaCreditCard, FaClipboardCheck, FaMicroscope, FaSearch, FaTruck, 
+  FaCheckCircle, FaBoxOpen, FaShoppingBag 
+} from 'react-icons/fa';
 import styles from './page.module.css';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 const STATUS_STEPS = [
-  { id: 'Payment Received', icon: '💰' },
-  { id: 'Prescription Verified', icon: '📋' },
-  { id: 'Lab Processing', icon: '🔬' },
-  { id: 'Quality Check', icon: '🔍' },
-  { id: 'Shipped', icon: '🚚' },
-  { id: 'Delivered', icon: '✅' }
+  { id: 'Payment Received', icon: <FaCreditCard /> },
+  { id: 'Prescription Verified', icon: <FaClipboardCheck /> },
+  { id: 'Lab Processing', icon: <FaMicroscope /> },
+  { id: 'Quality Check', icon: <FaSearch /> },
+  { id: 'Shipped', icon: <FaTruck /> },
+  { id: 'Delivered', icon: <FaCheckCircle /> }
 ];
 
 export default function OrdersPage() {
@@ -30,6 +35,17 @@ export default function OrdersPage() {
       .then(({ data }) => { setOrders(data.orders || []); setLoading(false); })
       .catch(() => setLoading(false));
   }, [token]);
+
+  const handleCancel = async (id) => {
+    if (!window.confirm('Are you sure you want to cancel this order?')) return;
+    try {
+      await axios.put(`${API}/orders/${id}/cancel`, {}, { headers: { Authorization: `Bearer ${token}` } });
+      toast.success('Order cancelled successfully');
+      setOrders(orders.map(o => o._id === id ? { ...o, status: 'Cancelled' } : o));
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to cancel order');
+    }
+  };
 
   if (!user) return <div className="flex-center" style={{ minHeight: 400 }}><Link href="/login" className="btn btn-primary">Login to view orders</Link></div>;
 
@@ -48,16 +64,22 @@ export default function OrdersPage() {
     return (
       <div className={styles.timeline}>
         {STATUS_STEPS.map((step, i) => (
-          <div key={step.id} className={`${styles.timelineStep} ${i <= currentIdx ? styles.timelineActive : ''}`}>
+          <motion.div 
+            key={step.id} 
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.1 }}
+            className={`${styles.timelineStep} ${i <= currentIdx ? styles.timelineActive : ''}`}
+          >
             <div className={styles.timelineDot} style={{ color: i <= currentIdx ? STATUS_COLORS[step.id] : undefined }}>
               {step.icon}
             </div>
             <div className={styles.timelineInfo}>
               <div className={styles.timelineStatus}>{step.id}</div>
-              {i <= currentIdx && <div className={styles.timelineDate}>Updated</div>}
+              {i <= currentIdx && <div className={styles.timelineDate}>Completed</div>}
             </div>
-            {i < STATUS_STEPS.length - 1 && <div className={`${styles.timelineLine} ${i < currentIdx ? styles.lineActive : ''}`} />}
-          </div>
+            {i < STATUS_STEPS.length - 1 && <div className={`${styles.timelineLine} ${i <= currentIdx ? styles.lineActive : ''}`} />}
+          </motion.div>
         ))}
       </div>
     );
@@ -77,7 +99,7 @@ export default function OrdersPage() {
         <div className="flex-center" style={{ minHeight: 300 }}><div className="spinner" /></div>
       ) : orders.length === 0 ? (
         <div className={styles.empty}>
-          <div className={styles.emptyIcon}>📦</div>
+          <div className={styles.emptyIcon}><FaBoxOpen /></div>
           <h3>No orders yet</h3>
           <p>Start shopping to see your orders here</p>
           <Link href="/products" className="btn btn-primary">Browse Eyewear</Link>
@@ -91,7 +113,7 @@ export default function OrdersPage() {
                 <div className={styles.badges}>
                   <span className="badge" style={{ background: `${STATUS_COLORS[order.status]}18`, color: STATUS_COLORS[order.status] }}>{order.status}</span>
                   <span className="badge" style={{ background: `${PAY_COLORS[order.paymentStatus]}18`, color: PAY_COLORS[order.paymentStatus], fontSize: '0.7rem' }}>
-                    {order.paymentStatus === 'Paid' ? '💳 Paid' : '⏳ Payment Pending'}
+                    {order.paymentStatus === 'Paid' ? <><FaCreditCard /> Paid</> : <><FaShoppingBag /> Payment Pending</>}
                   </span>
                 </div>
                 <div className={styles.orderDate}>{new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
@@ -103,7 +125,7 @@ export default function OrdersPage() {
                     <div className={styles.itemDetails}>
                       <div className={styles.itemName}>{item.productName}</div>
                       <div className={styles.itemMeta}>{item.variant?.color} · Qty: {item.quantity}</div>
-                      {item.lens && <div className={styles.lensTag}>🔭 {item.lens.powerType} — {item.lens.package}</div>}
+                      {item.lens && <div className={styles.lensTag}><FaSearch /> {item.lens.powerType} — {item.lens.package}</div>}
                     </div>
                     <div className={styles.itemPrice}>₹{(item.price * item.quantity).toLocaleString('en-IN')}</div>
                   </div>
@@ -117,9 +139,20 @@ export default function OrdersPage() {
                 {order.trackingNumber && (
                   <div className={styles.tracking}>🚚 Tracking: <strong>{order.trackingNumber}</strong> via {order.courierName}</div>
                 )}
-                <button className="btn btn-outline btn-sm" onClick={() => setSelected(selected?._id === order._id ? null : order)}>
-                  {selected?._id === order._id ? 'Hide Details' : 'Track Order'}
-                </button>
+                <div className={styles.orderActions}>
+                  <button className="btn btn-outline btn-sm" onClick={() => setSelected(selected?._id === order._id ? null : order)}>
+                    {selected?._id === order._id ? 'Hide Details' : 'Track Order'}
+                  </button>
+                  {['Order Placed', 'Payment Received'].includes(order.status) && (
+                    <button 
+                      className="btn btn-outline btn-sm" 
+                      style={{ borderColor: '#EF4444', color: '#EF4444' }}
+                      onClick={() => handleCancel(order._id)}
+                    >
+                      Cancel Order
+                    </button>
+                  )}
+                </div>
               </div>
               {selected?._id === order._id && (
                 <div className={styles.trackSection}>

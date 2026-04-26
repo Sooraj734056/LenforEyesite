@@ -30,7 +30,7 @@ router.post('/', protect, async (req, res) => {
 
     let discount = 0;
     let couponApplied = null;
-    if (couponCode) {
+    if (couponCode && couponCode.trim()) {
       const coupon = await Coupon.findOne({ code: couponCode.toUpperCase(), isActive: true });
       if (coupon) {
         const validation = coupon.isValid(req.user._id, itemsTotal + lensTotal);
@@ -45,7 +45,8 @@ router.post('/', protect, async (req, res) => {
     }
 
     const shippingCost = (itemsTotal + lensTotal) >= 1000 ? 0 : 99;
-    const subtotal = itemsTotal + lensTotal - discount + shippingCost;
+    const codFee = paymentMethod === 'COD' ? 49 : 0;
+    const subtotal = itemsTotal + lensTotal - discount + shippingCost + codFee;
     const tax = Math.round(subtotal * 0.18);
     const grandTotal = subtotal + tax;
 
@@ -168,6 +169,31 @@ router.put('/:id/job-sheet', adminAuth, async (req, res) => {
 router.get('/:id/job-sheet', adminAuth, async (req, res) => {
   try {
     const order = await Order.findById(req.params.id).populate('items.product', 'name brand').populate('user', 'name email phone');
+    res.json({ success: true, order });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// PUT /api/orders/:id/cancel — User: cancel order
+router.put('/:id/cancel', protect, async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) return res.status(404).json({ success: false, message: 'Order not found.' });
+    if (order.user.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ success: false, message: 'Not authorized.' });
+    }
+    
+    // Only allow cancellation if order is in early stages
+    const cancellableStatuses = ['Order Placed', 'Payment Received'];
+    if (!cancellableStatuses.includes(order.status)) {
+      return res.status(400).json({ success: false, message: `Cannot cancel order in ${order.status} stage.` });
+    }
+
+    order.status = 'Cancelled';
+    order.statusHistory.push({ status: 'Cancelled', note: 'Cancelled by user', updatedBy: req.user._id });
+    await order.save();
+    
     res.json({ success: true, order });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

@@ -34,6 +34,9 @@ const footerLinks = {
   ]
 };
 
+import { FiMail, FiPhone, FiMapPin, FiClock, FiInstagram, FiFacebook, FiYoutube, FiSend } from 'react-icons/fi';
+import { FaWhatsapp } from 'react-icons/fa';
+
 export default function Footer() {
   const pathname = usePathname();
   if (pathname?.startsWith('/admin')) return null;
@@ -45,72 +48,64 @@ export default function Footer() {
           <div className={styles.footerGrid}>
             {/* Brand Column */}
             <div className={styles.brandCol}>
-              <div className={styles.logo}>
-                <img 
-                  src="/img/logo.png" 
-                  alt="Lens For Eyesight" 
-                  width="40" 
-                  height="40"
-                  style={{ objectFit: 'contain' }}
-                />
-                <div>
-                  <div className={styles.logoMain}>LENS FOR EYESIGHT</div>
-                  <div className={styles.logoSub}>Your Vision, Our Priority</div>
+              <Link href="/" className={styles.logo}>
+                <div className={styles.logoIcon}>
+                  <img src="/img/logo.png" alt="Logo" width="45" height="45" />
                 </div>
-              </div>
+                <div className={styles.logoText}>
+                  <span className={styles.logoMain}>LENS FOR EYESIGHT</span>
+                  <span className={styles.logoSub}>ESTD. 2018 • JAIPUR</span>
+                </div>
+              </Link>
               <p className={styles.brandDesc}>
-                Jaipur's trusted eyewear destination since 2018. Premium frames, expert consultation, and free home eye tests across Raja Park.
+                Experience premium eyewear in Jaipur. We combine world-class lens technology with iconic frame styles to give you perfect vision and a stunning look.
               </p>
-              <div className={styles.contact}>
-                <div className={styles.contactItem}>
-                  <span>📍</span>
-                  <span>Shop 14, Raja Park Main Road, Jaipur - 302004</span>
-                </div>
-                <div className={styles.contactItem}>
-                  <span>📞</span>
-                  <a href="tel:+919999999999">+91 99999 99999</a>
-                </div>
-                <div className={styles.contactItem}>
-                  <span>✉️</span>
-                  <a href="mailto:info@lensforeyesight.com">info@lensforeyesight.com</a>
-                </div>
-                <div className={styles.contactItem}>
-                  <span>🕐</span>
-                  <span>Mon–Sat: 10 AM – 8 PM</span>
-                </div>
-              </div>
-              <div className={styles.social}>
-                <a href="https://wa.me/919999999999" className={styles.socialBtn} title="WhatsApp" target="_blank" rel="noreferrer">
-                  <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                  </svg>
-                </a>
-                <a href="#" className={styles.socialBtn} title="Instagram">
-                  <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
-                  </svg>
-                </a>
-                <a href="#" className={styles.socialBtn} title="Facebook">
-                  <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                  </svg>
-                </a>
+              <div className={styles.socialLinks}>
+                <a href="#" className={styles.socialBtn} aria-label="Instagram"><FiInstagram /></a>
+                <a href="#" className={styles.socialBtn} aria-label="Facebook"><FiFacebook /></a>
+                <a href="#" className={styles.socialBtn} aria-label="WhatsApp"><FaWhatsapp /></a>
+                <a href="#" className={styles.socialBtn} aria-label="YouTube"><FiYoutube /></a>
               </div>
             </div>
 
-            {/* Link Columns */}
-            {Object.entries(footerLinks).map(([title, links]) => (
-              <div key={title} className={styles.linkCol}>
-                <h4 className={styles.colTitle}>{title}</h4>
-                <ul className={styles.linkList}>
-                  {links.map(link => (
-                    <li key={link.href}>
-                      <Link href={link.href} className={styles.footerLink}>{link.label}</Link>
-                    </li>
-                  ))}
-                </ul>
+            {/* Quick Links */}
+            <div className={styles.linksGroup}>
+              {Object.entries(footerLinks).map(([title, links]) => (
+                <div key={title} className={styles.linkCol}>
+                  <h4 className={styles.colTitle}>{title}</h4>
+                  <ul className={styles.linkList}>
+                    {links.map(link => (
+                      <li key={link.href}>
+                        <Link href={link.href} className={styles.footerLink}>{link.label}</Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+
+            {/* Contact Info Column */}
+            <div className={styles.contactCol}>
+              <h4 className={styles.colTitle}>Get In Touch</h4>
+              <div className={styles.contactList}>
+                <div className={styles.contactItem}>
+                  <div className={styles.iconBox}><FiMapPin /></div>
+                  <p>Shop 14, Raja Park Main Road,<br />Jaipur, Rajasthan - 302004</p>
+                </div>
+                <div className={styles.contactItem}>
+                  <div className={styles.iconBox}><FiPhone /></div>
+                  <p><a href="tel:+919999999999">+91 99999 99999</a></p>
+                </div>
+                <div className={styles.contactItem}>
+                  <div className={styles.iconBox}><FiMail /></div>
+                  <p><a href="mailto:info@lensforeyesight.com">info@lensforeyesight.com</a></p>
+                </div>
+                <div className={styles.contactItem}>
+                  <div className={styles.iconBox}><FiClock /></div>
+                  <p>Mon – Sat: 10:00 AM – 8:00 PM</p>
+                </div>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </div>
@@ -118,13 +113,22 @@ export default function Footer() {
       <div className={styles.footerBottom}>
         <div className="container">
           <div className={styles.bottomInner}>
-            <p>© {new Date().getFullYear()} Lens For Eyesight. All rights reserved. Made with ❤️ in Jaipur.</p>
-            <div className={styles.payments}>
-              <span>Accepted Payments:</span>
-              <span className={styles.payIcon}>UPI</span>
-              <span className={styles.payIcon}>Visa</span>
-              <span className={styles.payIcon}>MC</span>
-              <span className={styles.payIcon}>NetBanking</span>
+            <div className={styles.copyright}>
+              © {new Date().getFullYear()} <span>Lens For Eyesight</span>. All rights reserved. 
+              <br className={styles.mobileBreak} /> Built for Excellence in Jaipur.
+            </div>
+            <div className={styles.legal}>
+              <Link href="/legal/terms">Terms</Link>
+              <span className={styles.dot}>•</span>
+              <Link href="/legal/privacy">Privacy</Link>
+              <span className={styles.dot}>•</span>
+              <Link href="/legal/refund">Refunds</Link>
+            </div>
+            <div className={styles.paymentBadges}>
+              <img src="https://img.icons8.com/color/48/visa.png" alt="Visa" />
+              <img src="https://img.icons8.com/color/48/mastercard.png" alt="Mastercard" />
+              <img src="https://img.icons8.com/color/48/google-pay.png" alt="GPay" />
+              <img src="https://img.icons8.com/color/48/upi.png" alt="UPI" />
             </div>
           </div>
         </div>

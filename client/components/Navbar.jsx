@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 import useCartStore from '@/store/cartStore';
 import useAuthStore from '@/store/authStore';
 import { resolveMediaUrl } from '@/lib/media';
@@ -10,7 +11,7 @@ import {
   FaGlasses, FaCrown, FaStar, FaLaptop, FaBook, FaEye, FaCalendarAlt, 
   FaHeart, FaUser, FaBox, FaClipboardList, FaUserShield, FaSignOutAlt, FaSearch
 } from 'react-icons/fa';
-import { FiMenu, FiX, FiShoppingBag } from 'react-icons/fi';
+import { FiMenu, FiX, FiShoppingBag, FiSearch, FiUser, FiHeart } from 'react-icons/fi';
 import styles from './Navbar.module.css';
 
 const categories = [
@@ -49,14 +50,23 @@ export default function Navbar() {
   useEffect(() => {
     setMounted(true);
     const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
     setMobileMenuOpen(false);
     setUserMenuOpen(false);
+    setCategoryMenu(false);
   }, [pathname]);
+
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [mobileMenuOpen]);
 
   const handleSearch = (e) => {
     const q = e.target.value;
@@ -67,7 +77,6 @@ export default function Navbar() {
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/search/suggestions?q=${encodeURIComponent(q)}`);
         const data = await res.json();
-        // The server route might need to select 'price' too, but let's see if it does
         setSuggestions(data.suggestions || []);
         setShowSuggestions(true);
       } catch (_) {}
@@ -79,6 +88,7 @@ export default function Navbar() {
     if (searchQuery.trim()) {
       router.push(`/products?search=${encodeURIComponent(searchQuery)}`);
       setShowSuggestions(false);
+      setMobileSearchOpen(false);
     }
   };
 
@@ -94,12 +104,13 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ''}`}>
+      <nav className={`${styles.navbar} ${scrolled ? styles.scrolled + ' glass' : ''}`}>
         <div className={styles.navInner}>
           {/* Logo */}
           <Link href="/" className={styles.logo}>
             <div className={styles.logoIcon}>
-              <img 
+              <motion.img 
+                whileHover={{ scale: 1.1, rotate: 5 }}
                 src="/img/logo.png" 
                 alt="Lens For Eyesight" 
                 width="45" 
@@ -116,9 +127,7 @@ export default function Navbar() {
           {/* Search Bar */}
           <form className={`${styles.searchBar} ${mobileSearchOpen ? styles.mobileOpen : ''}`} onSubmit={handleSearchSubmit} ref={searchRef}>
             <div className={styles.searchInputWrap}>
-              <svg className={styles.searchIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-              </svg>
+              <FiSearch className={styles.searchIcon} />
               <input
                 type="text"
                 placeholder="Search frames, brands, shapes..."
@@ -129,42 +138,58 @@ export default function Navbar() {
                 className={styles.searchInput}
                 id="nav-search"
               />
-              {searchQuery && (
-                <button type="button" className={styles.clearSearch} onClick={() => { setSearchQuery(''); setSuggestions([]); }}>✕</button>
-              )}
+              <AnimatePresence>
+                {searchQuery && (
+                  <motion.button 
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                    type="button" 
+                    className={styles.clearSearch} 
+                    onClick={() => { setSearchQuery(''); setSuggestions([]); }}
+                  >✕</motion.button>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Suggestions Dropdown */}
-            {showSuggestions && suggestions.length > 0 && (
-              <div className={styles.suggestions}>
-                {suggestions.map(s => (
-                  <Link 
-                    key={s._id} 
-                    href={`/product/${s.slug || s._id}`} 
-                    className={styles.suggestionItem}
-                    onClick={() => { setShowSuggestions(false); setMobileSearchOpen(false); }}
-                  >
-                    <div className={styles.suggestionLeft}>
-                      <img 
-                        src={resolveMediaUrl(s.variants?.[0]?.images?.[0]) || '/img/placeholder.png'} 
-                        alt={s.name} 
-                      />
-                      <div className={styles.suggestionInfo}>
-                        <span className={styles.suggestionName}>{s.name}</span>
-                        <span className={styles.suggestionBrand}>{s.brand}</span>
-                      </div>
-                    </div>
-                    <span className={styles.suggestionPrice}>₹{s.price || '...'}</span>
-                  </Link>
-                ))}
-                <button 
-                  className={styles.seeAllSearch}
-                  onClick={() => router.push(`/products?search=${encodeURIComponent(searchQuery)}`)}
+            <AnimatePresence>
+              {showSuggestions && suggestions.length > 0 && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className={`${styles.suggestions} glass`}
                 >
-                  See all results for "{searchQuery}"
-                </button>
-              </div>
-            )}
+                  {suggestions.map(s => (
+                    <Link 
+                      key={s._id} 
+                      href={`/product/${s.slug || s._id}`} 
+                      className={styles.suggestionItem}
+                      onClick={() => { setShowSuggestions(false); setMobileSearchOpen(false); }}
+                    >
+                      <div className={styles.suggestionLeft}>
+                        <img 
+                          src={resolveMediaUrl(s.variants?.[0]?.images?.[0]) || '/img/placeholder.png'} 
+                          alt={s.name} 
+                        />
+                        <div className={styles.suggestionInfo}>
+                          <span className={styles.suggestionName}>{s.name}</span>
+                          <span className={styles.suggestionBrand}>{s.brand}</span>
+                        </div>
+                      </div>
+                      <span className={styles.suggestionPrice}>₹{s.price || '...'}</span>
+                    </Link>
+                  ))}
+                  <button 
+                    className={styles.seeAllSearch}
+                    onClick={() => router.push(`/products?search=${encodeURIComponent(searchQuery)}`)}
+                  >
+                    See all results for "{searchQuery}"
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </form>
 
           {/* Nav Actions */}
@@ -180,25 +205,35 @@ export default function Navbar() {
                 menuTimerRef.current = setTimeout(() => setCategoryMenu(false), 200);
               }}
             >
-              <button className={styles.navBtn} id="category-menu-btn">
+              <button className={`${styles.navBtn} ${categoryMenu ? styles.active : ''}`} id="category-menu-btn">
                 Categories
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14">
+                <motion.svg 
+                  animate={{ rotate: categoryMenu ? 180 : 0 }}
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14"
+                >
                   <polyline points="6 9 12 15 18 9"/>
-                </svg>
+                </motion.svg>
               </button>
-              {categoryMenu && (
-                <div className={styles.dropdownMenu}>
-                  {categories.map(cat => (
-                    <Link key={cat.href} href={cat.href} className={styles.dropdownItem}>
-                      <span>{cat.icon}</span> {cat.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
+              <AnimatePresence>
+                {categoryMenu && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 15, scale: 0.95 }}
+                    className={`${styles.dropdownMenu} glass`}
+                  >
+                    {categories.map(cat => (
+                      <Link key={cat.href} href={cat.href} className={styles.dropdownItem}>
+                        <span className={styles.dropIcon}>{cat.icon}</span> {cat.label}
+                      </Link>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             <Link href="/contact#appointment" className={`${styles.navBtn} ${styles.appointmentBtn}`}>
-              <FaCalendarAlt /> Eye Test
+              <FaCalendarAlt /> <span>Eye Test</span>
             </Link>
 
             {/* Wishlist */}
@@ -207,24 +242,25 @@ export default function Navbar() {
               onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
               aria-label="Toggle Search"
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="22" height="22">
-                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-              </svg>
+              <FiSearch size={22} />
             </button>
 
             <Link href="/account/wishlist" className={styles.iconBtn} title="Wishlist" id="nav-wishlist">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="22" height="22">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-              </svg>
+              <FiHeart size={22} />
             </Link>
 
             {/* Cart */}
             <button className={styles.iconBtn} onClick={toggleCart} id="nav-cart" title="Cart">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="22" height="22">
-                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-              </svg>
-              {mounted && cartCount > 0 && <span className={styles.cartBadge}>{cartCount}</span>}
+              <FiShoppingBag size={22} />
+              {mounted && cartCount > 0 && (
+                <motion.span 
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className={styles.cartBadge}
+                >
+                  {cartCount}
+                </motion.span>
+              )}
             </button>
 
             {/* User Menu */}
@@ -245,16 +281,26 @@ export default function Navbar() {
                   </div>
                   <span className={styles.userName}>{user.name.split(' ')[0]}</span>
                 </button>
-                {userMenuOpen && (
-                  <div className={styles.dropdownMenu} style={{ right: 0, left: 'auto' }}>
-                    <Link href="/account" className={styles.dropdownItem}><FaUser /> My Account</Link>
-                    <Link href="/account/orders" className={styles.dropdownItem}><FaBox /> My Orders</Link>
-                    <Link href="/account/prescriptions" className={styles.dropdownItem}><FaClipboardList /> Prescriptions</Link>
-                    {isAdminUser && <Link href="/admin" className={styles.dropdownItem}><FaUserShield /> Admin Panel</Link>}
-                    <hr style={{ margin: '4px 0', borderColor: '#eee' }} />
-                    <button onClick={handleLogout} className={`${styles.dropdownItem} ${styles.logoutBtn}`}><FaSignOutAlt /> Logout</button>
-                  </div>
-                )}
+                <AnimatePresence>
+                  {userMenuOpen && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 15, scale: 0.95 }}
+                      className={`${styles.dropdownMenu} glass`} 
+                      style={{ right: 0, left: 'auto' }}
+                    >
+                      <Link href="/account" className={styles.dropdownItem}><FaUser /> My Account</Link>
+                      <Link href="/account/rewards" className={styles.dropdownItem}><FaCrown /> Lens Rewards</Link>
+                      <Link href="/account/orders" className={styles.dropdownItem}><FaBox /> My Orders</Link>
+                      <Link href="/account/prescriptions" className={styles.dropdownItem}><FaClipboardList /> Prescription Vault</Link>
+                      <Link href="/account/wishlist" className={styles.dropdownItem}><FaHeart /> My Wishlist</Link>
+                      {isAdminUser && <Link href="/admin" className={styles.dropdownItem}><FaUserShield /> Admin Panel</Link>}
+                      <hr style={{ margin: '8px 0', opacity: 0.1 }} />
+                      <button onClick={handleLogout} className={`${styles.dropdownItem} ${styles.logoutBtn}`}><FaSignOutAlt /> Logout</button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             ) : (
               <Link href="/login" className="btn btn-primary btn-sm" id="nav-login">Login</Link>
@@ -268,40 +314,47 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Menu */}
-        {mobileMenuOpen && mounted && (
-          <div className={styles.mobileMenu}>
-            <form className={styles.mobileSearch} onSubmit={handleSearchSubmit}>
-              <input
-                type="text" placeholder="Search eyewear..."
-                value={searchQuery} onChange={handleSearch}
-                className="form-input"
-              />
-              <button type="submit" className="btn btn-primary btn-sm">Go</button>
-            </form>
-            <div className={styles.mobileLinks}>
-              {categories.map(cat => (
-                <Link key={cat.href} href={cat.href} className={styles.mobileLink}>
-                  <span className={styles.mobileIcon}>{cat.icon}</span> {cat.label}
-                </Link>
-              ))}
-              <Link href="/contact#appointment" className={styles.mobileLink}><FaCalendarAlt /> Book Eye Test</Link>
-              <Link href="/account/wishlist" className={styles.mobileLink}><FaHeart /> My Wishlist</Link>
-              {user ? (
-                <>
-                  <Link href="/account" className={styles.mobileLink}><FaUser /> My Account</Link>
-                  <Link href="/account/orders" className={styles.mobileLink}><FaBox /> Orders</Link>
-                  {isAdminUser && <Link href="/admin" className={styles.mobileLink}><FaUserShield /> Admin</Link>}
-                  <button onClick={handleLogout} className={styles.mobileLink}><FaSignOutAlt /> Logout</button>
-                </>
-              ) : (
-                <>
-                  <Link href="/login" className={styles.mobileLink}>Login</Link>
-                  <Link href="/register" className={styles.mobileLink}>Register</Link>
-                </>
-              )}
-            </div>
-          </div>
-        )}
+        <AnimatePresence>
+          {mobileMenuOpen && mounted && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className={`${styles.mobileMenu} glass`}
+            >
+              <div className={styles.mobileLinks}>
+                <form className={styles.mobileSearch} onSubmit={handleSearchSubmit}>
+                  <input
+                    type="text" placeholder="Search eyewear..."
+                    value={searchQuery} onChange={handleSearch}
+                    className="form-input"
+                  />
+                  <button type="submit" className="btn btn-primary btn-sm">Search</button>
+                </form>
+                {categories.map(cat => (
+                  <Link key={cat.href} href={cat.href} className={styles.mobileLink}>
+                    <span className={styles.mobileIcon}>{cat.icon}</span> {cat.label}
+                  </Link>
+                ))}
+                <Link href="/contact#appointment" className={styles.mobileLink}><FaCalendarAlt /> Book Eye Test</Link>
+                <Link href="/account/wishlist" className={styles.mobileLink}><FiHeart /> My Wishlist</Link>
+                {user ? (
+                  <>
+                    <Link href="/account" className={styles.mobileLink}><FiUser /> My Account</Link>
+                    <Link href="/account/orders" className={styles.mobileLink}><FaBox /> Orders</Link>
+                    {isAdminUser && <Link href="/admin" className={styles.mobileLink}><FaUserShield /> Admin</Link>}
+                    <button onClick={handleLogout} className={styles.mobileLink}><FaSignOutAlt /> Logout</button>
+                  </>
+                ) : (
+                  <div className={styles.mobileAuth}>
+                    <Link href="/login" className="btn btn-primary">Login</Link>
+                    <Link href="/register" className="btn btn-outline">Register</Link>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
     </>
   );

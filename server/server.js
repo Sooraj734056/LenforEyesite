@@ -74,7 +74,8 @@ app.get('/api/health', (req, res) => {
     success: true,
     message: '🔵 Lens For Eyesight API is running',
     version: '1.0.0',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    debug: 'V2_PRESCRIPTIONS_LOADED'
   });
 });
 

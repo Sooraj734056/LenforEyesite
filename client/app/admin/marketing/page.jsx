@@ -5,16 +5,21 @@ import useAuthStore from '@/store/authStore';
 import { resolveMediaUrl } from '@/lib/media';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { 
+  FiLayout, FiBox, FiShoppingBag, FiCalendar, FiTarget, FiArrowLeft, 
+  FiPlus, FiTrash2, FiTag, FiImage, FiExternalLink, FiPercent 
+} from 'react-icons/fi';
+import styles from '../page.module.css';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 const NAV_ITEMS = [
-  { label: 'Dashboard', href: '/admin', icon: '📊' },
-  { label: 'Products', href: '/admin/products', icon: '👓' },
-  { label: 'Orders', href: '/admin/orders', icon: '📦' },
-  { label: 'Appointments', href: '/admin/appointments', icon: '📅' },
-  { label: 'Marketing', href: '/admin/marketing', icon: '🎯' },
-  { label: '← Store', href: '/', icon: '🏪' },
+  { label: 'Dashboard', href: '/admin', icon: <FiLayout /> },
+  { label: 'Products', href: '/admin/products', icon: <FiBox /> },
+  { label: 'Orders', href: '/admin/orders', icon: <FiShoppingBag /> },
+  { label: 'Appointments', href: '/admin/appointments', icon: <FiCalendar /> },
+  { label: 'Marketing', href: '/admin/marketing', icon: <FiTarget /> },
+  { label: 'Back to Store', href: '/', icon: <FiArrowLeft /> },
 ];
 
 export default function MarketingPage() {
@@ -84,105 +89,168 @@ export default function MarketingPage() {
     }
   };
 
+  const deleteCoupon = async (id) => {
+    if (!confirm('Delete this coupon?')) return;
+    try {
+      await axios.delete(`${API}/coupons/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+      toast.success('Coupon deleted');
+      fetchData();
+    } catch (_) {
+      toast.error('Failed to delete coupon');
+    }
+  };
+
   if (!user || user.role !== 'admin') return null;
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--off-white)' }}>
-      <aside style={{ width: 240, background: 'var(--dark)', flexShrink: 0, padding: '24px 12px', display: 'flex', flexDirection: 'column', gap: 4, position: 'sticky', top: 0, height: '100vh' }}>
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center', padding: '0 8px 20px', borderBottom: '1px solid var(--border-dark)', marginBottom: 8 }}>
-          <span>👓</span><div style={{ fontSize: '0.825rem', fontWeight: 700, color: 'white' }}>Lens Admin</div>
+    <div className={styles.adminLayout}>
+      <aside className={styles.sidebar}>
+        <div className={styles.sidebarBrand}>
+          <div className={styles.brandIcon}><FiBox /></div>
+          <div>
+            <div className={styles.brandName}>LensPanel</div>
+            <div className={styles.brandSub}>PRO DASHBOARD</div>
+          </div>
         </div>
-        {NAV_ITEMS.map(item => (
-          <Link key={item.href} href={item.href} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', borderRadius: 6, fontSize: '0.875rem', color: item.href === '/admin/marketing' ? 'var(--primary)' : 'var(--gray-light)', background: item.href === '/admin/marketing' ? 'rgba(0,174,239,0.12)' : 'transparent', fontWeight: 500 }}>
-            <span>{item.icon}</span>{item.label}
-          </Link>
-        ))}
+        <nav className={styles.sidebarNav}>
+          {NAV_ITEMS.map(item => (
+            <Link key={item.href} href={item.href} className={`${styles.navItem} ${item.href === '/admin/marketing' ? styles.navActive : ''}`}>
+              <span className={styles.navIcon}>{item.icon}</span>
+              <span>{item.label}</span>
+            </Link>
+          ))}
+        </nav>
+        <div className={styles.sidebarUser}>
+          <div className={styles.userAvatar}>{user.name[0]}</div>
+          <div className={styles.userInfo}>
+            <div className={styles.userName}>{user.name}</div>
+            <div className={styles.userRole}>System Admin</div>
+          </div>
+        </div>
       </aside>
 
-      <main style={{ flex: 1, padding: 32 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
+      <main className={styles.main}>
+        <div className={styles.topBar}>
           <div>
-            <h1 style={{ fontSize: '1.25rem', fontWeight: 800 }}>Marketing & Promotions</h1>
-            <p style={{ color: 'var(--gray-mid)', fontSize: '0.825rem' }}>Manage coupons and homepage banners</p>
+            <h1 className={styles.pageTitle}>Marketing</h1>
+            <p className={styles.pageDate}>Manage promotions & visuals</p>
           </div>
         </div>
 
-        {/* Coupons Section */}
-        <section style={{ marginBottom: 40 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-            <h2 style={{ fontSize: '1rem', fontWeight: 700 }}>Discount Coupons</h2>
-            <button className="btn btn-primary btn-sm" onClick={() => setShowCouponModal(true)}>+ Create Coupon</button>
-          </div>
-          <div style={{ background: 'white', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', overflow: 'hidden' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.825rem' }}>
-              <thead style={{ background: 'var(--off-white)' }}>
-                <tr>
-                  {['Code', 'Discount', 'Min Order', 'Expiry', 'Active', 'Actions'].map(h => (
-                    <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 700, color: 'var(--gray-mid)', fontSize: '0.72rem', textTransform: 'uppercase' }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {coupons.length === 0 ? (
-                  <tr><td colSpan={6} style={{ textAlign: 'center', padding: 24 }}>No coupons found</td></tr>
-                ) : coupons.map(c => (
-                  <tr key={c._id} style={{ borderBottom: '1px solid var(--off-white)' }}>
-                    <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--primary)' }}>{c.code}</td>
-                    <td style={{ padding: '12px 16px' }}>{c.discountType === 'percentage' ? `${c.discountValue}%` : `₹${c.discountValue}`}</td>
-                    <td style={{ padding: '12px 16px' }}>₹{c.minOrderAmount}</td>
-                    <td style={{ padding: '12px 16px' }}>{new Date(c.expiryDate).toLocaleDateString()}</td>
-                    <td style={{ padding: '12px 16px' }}>{c.isActive ? '✅' : '❌'}</td>
-                    <td style={{ padding: '12px 16px' }}><button className="btn btn-outline btn-sm">Delete</button></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
+        <div style={{ padding: '32px 40px' }}>
+          {/* Coupons Section */}
+          <section style={{ marginBottom: 48 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: 10 }}>
+                <FiTag style={{ color: 'var(--primary)' }} /> Discount Coupons
+              </h2>
+              <button className="btn btn-primary btn-sm" onClick={() => setShowCouponModal(true)}>
+                <FiPlus /> Create Coupon
+              </button>
+            </div>
 
-        {/* Banners Section */}
-        <section>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-            <h2 style={{ fontSize: '1rem', fontWeight: 700 }}>Homepage Banners</h2>
-            <button className="btn btn-primary btn-sm" onClick={() => setShowBannerModal(true)}>+ Add Banner</button>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 20 }}>
-            {banners.map(b => (
-              <div key={b._id} style={{ background: 'white', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', overflow: 'hidden' }}>
-                <div style={{ height: 160, background: 'var(--off-white)', position: 'relative' }}>
-                  <img src={resolveMediaUrl(b.imageUrl)} alt={b.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                </div>
-                <div style={{ padding: 16 }}>
-                  <h3 style={{ fontSize: '0.9rem', fontWeight: 700, marginBottom: 4 }}>{b.title}</h3>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--gray-mid)', marginBottom: 12 }}>{b.subtitle}</p>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span className={`badge badge-${b.isActive ? 'success' : 'dark'}`}>{b.isActive ? 'Active' : 'Hidden'}</span>
-                    <div style={{ display: 'flex', gap: 8 }}>
-                      <button className="btn btn-outline btn-sm" onClick={() => deleteBanner(b._id)}>Delete</button>
+            <div className={styles.tableCard} style={{ padding: 0, overflow: 'hidden' }}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>Code</th>
+                    <th>Discount</th>
+                    <th>Min Order</th>
+                    <th>Expiry</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {coupons.length === 0 ? (
+                    <tr><td colSpan={6} style={{ textAlign: 'center', padding: 48, color: '#94a3b8' }}>No coupons found</td></tr>
+                  ) : coupons.map(c => (
+                    <tr key={c._id}>
+                      <td style={{ fontWeight: 800, color: 'var(--primary)', letterSpacing: '0.05em' }}>{c.code}</td>
+                      <td>
+                        <div style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
+                          <FiPercent size={14} /> {c.discountType === 'percentage' ? `${c.discountValue}%` : `₹${c.discountValue}`}
+                        </div>
+                      </td>
+                      <td className={styles.amount}>₹{c.minOrderAmount}</td>
+                      <td>{new Date(c.expiryDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+                      <td>
+                        <span className={`badge badge-${c.isActive ? 'success' : 'dark'}`}>
+                          {c.isActive ? 'Active' : 'Expired/Disabled'}
+                        </span>
+                      </td>
+                      <td>
+                        <button className="btn btn-outline btn-sm" onClick={() => deleteCoupon(c._id)} style={{ color: '#e11d48' }}>
+                          <FiTrash2 />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          {/* Banners Section */}
+          <section>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 800, display: 'flex', alignItems: 'center', gap: 10 }}>
+                <FiImage style={{ color: 'var(--primary)' }} /> Homepage Banners
+              </h2>
+              <button className="btn btn-primary btn-sm" onClick={() => setShowBannerModal(true)}>
+                <FiPlus /> Add Banner
+              </button>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 24 }}>
+              {banners.map(b => (
+                <div key={b._id} className={styles.tableCard} style={{ padding: 0, overflow: 'hidden' }}>
+                  <div style={{ height: 180, position: 'relative', background: '#f1f5f9' }}>
+                    <img 
+                      src={resolveMediaUrl(b.imageUrl)} 
+                      alt={b.title} 
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                    />
+                    <div style={{ position: 'absolute', top: 12, right: 12 }}>
+                      <span className={`badge badge-${b.isActive ? 'success' : 'dark'}`} style={{ boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>
+                        {b.isActive ? 'Live' : 'Draft'}
+                      </span>
+                    </div>
+                  </div>
+                  <div style={{ padding: 20 }}>
+                    <h3 style={{ fontSize: '1rem', fontWeight: 800, color: '#1e293b', marginBottom: 4 }}>{b.title}</h3>
+                    <p style={{ fontSize: '0.85rem', color: '#64748b', marginBottom: 16 }}>{b.subtitle}</p>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
+                        <FiExternalLink /> {b.link}
+                      </span>
+                      <button className="btn btn-outline btn-sm" onClick={() => deleteBanner(b._id)} style={{ color: '#e11d48' }}>
+                        <FiTrash2 />
+                      </button>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
+              ))}
+            </div>
+          </section>
+        </div>
 
         {/* Coupon Modal */}
         {showCouponModal && (
           <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
-            <div style={{ background: 'white', borderRadius: 'var(--radius-xl)', padding: 32, width: '100%', maxWidth: 480 }}>
-              <h3 style={{ marginBottom: 20 }}>Create New Coupon</h3>
+            <div style={{ background: 'white', borderRadius: '24px', padding: 32, width: '100%', maxWidth: 480 }}>
+              <h3 style={{ marginBottom: 24, fontFamily: 'var(--font-heading)', fontWeight: 800 }}>Create Coupon</h3>
               <form onSubmit={handleCreateCoupon}>
-                <div className="form-group" style={{ marginBottom: 12 }}>
-                  <label className="form-label">Coupon Code</label>
-                  <input className="form-input" required value={newCoupon.code} onChange={e => setNewCoupon({...newCoupon, code: e.target.value.toUpperCase()})} placeholder="SAVE20" />
+                <div className="form-group" style={{ marginBottom: 16 }}>
+                  <label className="form-label">Code (Uppercase)</label>
+                  <input className="form-input" required value={newCoupon.code} onChange={e => setNewCoupon({...newCoupon, code: e.target.value.toUpperCase()})} placeholder="SAVE50" />
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
                   <div className="form-group">
                     <label className="form-label">Type</label>
                     <select className="form-select" value={newCoupon.discountType} onChange={e => setNewCoupon({...newCoupon, discountType: e.target.value})}>
-                      <option value="percentage">Percentage</option>
-                      <option value="fixed">Fixed Amount</option>
+                      <option value="percentage">Percentage (%)</option>
+                      <option value="fixed">Fixed (₹)</option>
                     </select>
                   </div>
                   <div className="form-group">
@@ -190,9 +258,9 @@ export default function MarketingPage() {
                     <input className="form-input" type="number" required value={newCoupon.discountValue} onChange={e => setNewCoupon({...newCoupon, discountValue: e.target.value})} />
                   </div>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 24 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 }}>
                   <div className="form-group">
-                    <label className="form-label">Min Order</label>
+                    <label className="form-label">Min Order (₹)</label>
                     <input className="form-input" type="number" value={newCoupon.minOrderAmount} onChange={e => setNewCoupon({...newCoupon, minOrderAmount: e.target.value})} />
                   </div>
                   <div className="form-group">
@@ -201,8 +269,8 @@ export default function MarketingPage() {
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: 12 }}>
-                  <button type="button" className="btn btn-outline" onClick={() => setShowCouponModal(false)}>Cancel</button>
-                  <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>Create Coupon</button>
+                  <button type="button" className="btn btn-outline" onClick={() => setShowCouponModal(false)} style={{ flex: 1 }}>Cancel</button>
+                  <button type="submit" className="btn btn-primary" style={{ flex: 2 }}>Create Coupon</button>
                 </div>
               </form>
             </div>
@@ -212,38 +280,38 @@ export default function MarketingPage() {
         {/* Banner Modal */}
         {showBannerModal && (
           <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
-            <div style={{ background: 'white', borderRadius: 'var(--radius-xl)', padding: 32, width: '100%', maxWidth: 480 }}>
-              <h3 style={{ marginBottom: 20 }}>Add New Banner</h3>
+            <div style={{ background: 'white', borderRadius: '24px', padding: 32, width: '100%', maxWidth: 520 }}>
+              <h3 style={{ marginBottom: 24, fontFamily: 'var(--font-heading)', fontWeight: 800 }}>New Banner</h3>
               <form onSubmit={handleCreateBanner}>
-                <div className="form-group" style={{ marginBottom: 12 }}>
+                <div className="form-group" style={{ marginBottom: 16 }}>
                   <label className="form-label">Title</label>
-                  <input className="form-input" required value={newBanner.title} onChange={e => setNewBanner({...newBanner, title: e.target.value})} placeholder="New Season Offer" />
+                  <input className="form-input" required value={newBanner.title} onChange={e => setNewBanner({...newBanner, title: e.target.value})} placeholder="Mega Sale 2024" />
                 </div>
-                <div className="form-group" style={{ marginBottom: 12 }}>
+                <div className="form-group" style={{ marginBottom: 16 }}>
                   <label className="form-label">Subtitle</label>
-                  <input className="form-input" value={newBanner.subtitle} onChange={e => setNewBanner({...newBanner, subtitle: e.target.value})} placeholder="Up to 50% Off" />
+                  <input className="form-input" value={newBanner.subtitle} onChange={e => setNewBanner({...newBanner, subtitle: e.target.value})} placeholder="Flat 40% Off on Sunglasses" />
                 </div>
-                <div className="form-group" style={{ marginBottom: 12 }}>
+                <div className="form-group" style={{ marginBottom: 16 }}>
                   <label className="form-label">Image URL</label>
-                  <input className="form-input" required value={newBanner.imageUrl} onChange={e => setNewBanner({...newBanner, imageUrl: e.target.value})} placeholder="https://..." />
+                  <input className="form-input" required value={newBanner.imageUrl} onChange={e => setNewBanner({...newBanner, imageUrl: e.target.value})} placeholder="Paste image link here..." />
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 24 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 }}>
                   <div className="form-group">
-                    <label className="form-label">Link</label>
+                    <label className="form-label">Click Link</label>
                     <input className="form-input" value={newBanner.link} onChange={e => setNewBanner({...newBanner, link: e.target.value})} placeholder="/products" />
                   </div>
                   <div className="form-group">
-                    <label className="form-label">Position</label>
+                    <label className="form-label">Placement</label>
                     <select className="form-select" value={newBanner.position} onChange={e => setNewBanner({...newBanner, position: e.target.value})}>
-                      <option value="hero">Hero Slider</option>
-                      <option value="banner_bottom">Bottom Banner</option>
-                      <option value="popup">Popup</option>
+                      <option value="hero">Hero Slider (Main)</option>
+                      <option value="banner_bottom">Mid Section Banner</option>
+                      <option value="popup">Promotion Popup</option>
                     </select>
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: 12 }}>
-                  <button type="button" className="btn btn-outline" onClick={() => setShowBannerModal(false)}>Cancel</button>
-                  <button type="submit" className="btn btn-primary" style={{ flex: 1 }}>Add Banner</button>
+                  <button type="button" className="btn btn-outline" onClick={() => setShowBannerModal(false)} style={{ flex: 1 }}>Cancel</button>
+                  <button type="submit" className="btn btn-primary" style={{ flex: 2 }}>Launch Banner</button>
                 </div>
               </form>
             </div>

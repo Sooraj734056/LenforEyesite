@@ -179,3 +179,15 @@
   .infoSection { padding: 0 16px; }
   .tabs { padding: 24px 16px; }
 }
+
+@media (max-width: 480px) {
+  .productName { font-size: 1.35rem; }
+  .price { font-size: 1.5rem; }
+  .comparePrice { font-size: 0.95rem; }
+  .pdpGrid { gap: 24px; }
+  .specGrid { grid-template-columns: 1fr; }
+  .tryOnBanner { flex-direction: column; text-align: center; gap: 8px; }
+  .tryOnBtn { margin: 8px 0 0; width: 100%; }
+  .tabNav { padding: 10px 16px; font-size: 0.8rem; }
+  .ctaButtons button { width: 100% !important; flex: none; }
+}

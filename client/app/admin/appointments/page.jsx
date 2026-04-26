@@ -4,16 +4,21 @@ import Link from 'next/link';
 import useAuthStore from '@/store/authStore';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { 
+  FiLayout, FiBox, FiShoppingBag, FiCalendar, FiTarget, FiArrowLeft, 
+  FiUser, FiPhone, FiMapPin, FiClock, FiCheckCircle, FiEdit3 
+} from 'react-icons/fi';
+import styles from '../page.module.css';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
 const NAV_ITEMS = [
-  { label: 'Dashboard', href: '/admin', icon: '📊' },
-  { label: 'Products', href: '/admin/products', icon: '👓' },
-  { label: 'Orders', href: '/admin/orders', icon: '📦' },
-  { label: 'Appointments', href: '/admin/appointments', icon: '📅' },
-  { label: 'Marketing', href: '/admin/marketing', icon: '🎯' },
-  { label: '← Store', href: '/', icon: '🏪' },
+  { label: 'Dashboard', href: '/admin', icon: <FiLayout /> },
+  { label: 'Products', href: '/admin/products', icon: <FiBox /> },
+  { label: 'Orders', href: '/admin/orders', icon: <FiShoppingBag /> },
+  { label: 'Appointments', href: '/admin/appointments', icon: <FiCalendar /> },
+  { label: 'Marketing', href: '/admin/marketing', icon: <FiTarget /> },
+  { label: 'Back to Store', href: '/', icon: <FiArrowLeft /> },
 ];
 
 export default function AdminAppointmentsPage() {
@@ -58,79 +63,109 @@ export default function AdminAppointmentsPage() {
   if (!user || user.role !== 'admin') return null;
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--off-white)' }}>
-      <aside style={{ width: 240, background: 'var(--dark)', flexShrink: 0, padding: '24px 12px', display: 'flex', flexDirection: 'column', gap: 4, position: 'sticky', top: 0, height: '100vh' }}>
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center', padding: '0 8px 20px', borderBottom: '1px solid var(--border-dark)', marginBottom: 8 }}>
-          <span>👓</span><div style={{ fontSize: '0.825rem', fontWeight: 700, color: 'white' }}>Lens Admin</div>
+    <div className={styles.adminLayout}>
+      <aside className={styles.sidebar}>
+        <div className={styles.sidebarBrand}>
+          <div className={styles.brandIcon}><FiBox /></div>
+          <div>
+            <div className={styles.brandName}>LensPanel</div>
+            <div className={styles.brandSub}>PRO DASHBOARD</div>
+          </div>
         </div>
-        {NAV_ITEMS.map(item => (
-          <Link key={item.href} href={item.href} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', borderRadius: 6, fontSize: '0.875rem', color: item.href === '/admin/appointments' ? 'var(--primary)' : 'var(--gray-light)', background: item.href === '/admin/appointments' ? 'rgba(0,174,239,0.12)' : 'transparent', fontWeight: 500 }}>
-            <span>{item.icon}</span>{item.label}
-          </Link>
-        ))}
+        <nav className={styles.sidebarNav}>
+          {NAV_ITEMS.map(item => (
+            <Link key={item.href} href={item.href} className={`${styles.navItem} ${item.href === '/admin/appointments' ? styles.navActive : ''}`}>
+              <span className={styles.navIcon}>{item.icon}</span>
+              <span>{item.label}</span>
+            </Link>
+          ))}
+        </nav>
+        <div className={styles.sidebarUser}>
+          <div className={styles.userAvatar}>{user.name[0]}</div>
+          <div className={styles.userInfo}>
+            <div className={styles.userName}>{user.name}</div>
+            <div className={styles.userRole}>System Admin</div>
+          </div>
+        </div>
       </aside>
 
-      <main style={{ flex: 1, padding: 32 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+      <main className={styles.main}>
+        <div className={styles.topBar}>
           <div>
-            <h1 style={{ fontSize: '1.25rem', fontWeight: 800 }}>Eye Test Appointments</h1>
-            <p style={{ color: 'var(--gray-mid)', fontSize: '0.825rem' }}>Manage home eye test requests in Jaipur</p>
+            <h1 className={styles.pageTitle}>Appointments</h1>
+            <p className={styles.pageDate}>{appointments.length} eye test requests</p>
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
-          <select className="form-select" value={filter} onChange={e => setFilter(e.target.value)} style={{ padding: '8px 14px', maxWidth: 200 }}>
-            <option value="">All Status</option>
-            <option value="Pending">Pending</option>
-            <option value="Confirmed">Confirmed</option>
-            <option value="Completed">Completed</option>
-            <option value="Cancelled">Cancelled</option>
-          </select>
-        </div>
+        <div style={{ padding: '32px 40px' }}>
+          <div style={{ marginBottom: 24 }}>
+            <select className="form-select" value={filter} onChange={e => setFilter(e.target.value)} style={{ width: 220 }}>
+              <option value="">All Statuses</option>
+              <option value="Pending">Pending</option>
+              <option value="Confirmed">Confirmed</option>
+              <option value="Completed">Completed</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
 
-        <div style={{ background: 'white', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', overflow: 'hidden' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.825rem' }}>
-            <thead style={{ background: 'var(--off-white)' }}>
-              <tr>
-                {['Customer', 'Phone', 'Address', 'Scheduled For', 'Status', 'Actions'].map(h => (
-                  <th key={h} style={{ padding: '12px 16px', textAlign: 'left', fontWeight: 700, color: 'var(--gray-mid)', fontSize: '0.72rem', textTransform: 'uppercase' }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr><td colSpan={6} style={{ textAlign: 'center', padding: 40 }}>Loading appointments...</td></tr>
-              ) : appointments.length === 0 ? (
-                <tr><td colSpan={6} style={{ textAlign: 'center', padding: 40 }}>No appointments found</td></tr>
-              ) : appointments.map(appt => (
-                <tr key={appt._id} style={{ borderBottom: '1px solid var(--off-white)' }}>
-                  <td style={{ padding: '12px 16px', fontWeight: 600 }}>{appt.name}</td>
-                  <td style={{ padding: '12px 16px' }}>{appt.phone}</td>
-                  <td style={{ padding: '12px 16px', maxWidth: 250 }}>{appt.address}, {appt.city}</td>
-                  <td style={{ padding: '12px 16px' }}>
-                    <div style={{ fontWeight: 600 }}>{new Date(appt.date).toLocaleDateString('en-IN')}</div>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--gray-mid)' }}>{appt.timeSlot}</div>
-                  </td>
-                  <td style={{ padding: '12px 16px' }}>
-                    <span className={`badge badge-${appt.status === 'Completed' ? 'success' : appt.status === 'Pending' ? 'warning' : appt.status === 'Cancelled' ? 'error' : 'primary'}`}>
-                      {appt.status}
-                    </span>
-                  </td>
-                  <td style={{ padding: '12px 16px' }}>
-                    <button className="btn btn-outline btn-sm" onClick={() => { setSelected(appt); setUpdateData({ status: appt.status, note: appt.adminNote || '' }); }}>Manage</button>
-                  </td>
+          <div className={styles.tableCard} style={{ padding: 0, overflow: 'hidden' }}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Customer</th>
+                  <th>Phone</th>
+                  <th>Address</th>
+                  <th>Schedule</th>
+                  <th>Status</th>
+                  <th>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr><td colSpan={6} style={{ textAlign: 'center', padding: 48, color: '#94a3b8' }}>Loading...</td></tr>
+                ) : appointments.length === 0 ? (
+                  <tr><td colSpan={6} style={{ textAlign: 'center', padding: 48, color: '#94a3b8' }}>No eye test requests found</td></tr>
+                ) : appointments.map(appt => (
+                  <tr key={appt._id}>
+                    <td>
+                      <div style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}><FiUser /> {appt.name}</div>
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}><FiPhone /> {appt.phone}</div>
+                    </td>
+                    <td style={{ maxWidth: 280 }}>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
+                        <FiMapPin style={{ marginTop: 3, flexShrink: 0 }} />
+                        <span>{appt.address}, {appt.city}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <div style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}><FiCalendar /> {new Date(appt.date).toLocaleDateString('en-IN')}</div>
+                      <div style={{ fontSize: '0.75rem', color: '#64748b', display: 'flex', alignItems: 'center', gap: 6 }}><FiClock /> {appt.timeSlot}</div>
+                    </td>
+                    <td>
+                      <span className={`badge badge-${appt.status === 'Completed' ? 'success' : appt.status === 'Pending' ? 'warning' : appt.status === 'Cancelled' ? 'error' : 'primary'}`}>
+                        {appt.status}
+                      </span>
+                    </td>
+                    <td>
+                      <button className="btn btn-outline btn-sm" onClick={() => { setSelected(appt); setUpdateData({ status: appt.status, note: appt.adminNote || '' }); }}><FiEdit3 /></button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {selected && (
           <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
-            <div style={{ background: 'white', border: '1px solid var(--border)', borderRadius: 'var(--radius-xl)', padding: 32, width: '100%', maxWidth: 480 }}>
-              <h3 style={{ marginBottom: 16 }}>Update Appointment</h3>
+            <div style={{ background: 'white', borderRadius: '24px', padding: 32, width: '100%', maxWidth: 480, boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1)' }}>
+              <h3 style={{ marginBottom: 4, fontFamily: 'var(--font-heading)', fontWeight: 800 }}>Manage Eye Test</h3>
+              <p style={{ color: '#64748b', fontSize: '0.875rem', marginBottom: 24 }}>Customer: {selected.name}</p>
+              
               <div className="form-group" style={{ marginBottom: 16 }}>
-                <label className="form-label">Status</label>
+                <label className="form-label">Update Status</label>
                 <select className="form-select" value={updateData.status} onChange={e => setUpdateData({ ...updateData, status: e.target.value })}>
                   <option value="Pending">Pending</option>
                   <option value="Confirmed">Confirmed</option>
@@ -138,13 +173,21 @@ export default function AdminAppointmentsPage() {
                   <option value="Cancelled">Cancelled</option>
                 </select>
               </div>
+              
               <div className="form-group" style={{ marginBottom: 24 }}>
-                <label className="form-label">Admin Note (Internal)</label>
-                <textarea className="form-textarea" value={updateData.note} onChange={e => setUpdateData({ ...updateData, note: e.target.value })} rows={3} placeholder="Notes about the visit..." />
+                <label className="form-label">Internal Note</label>
+                <textarea 
+                  className="form-textarea" 
+                  value={updateData.note} 
+                  onChange={e => setUpdateData({ ...updateData, note: e.target.value })} 
+                  rows={3} 
+                  placeholder="Notes about the home visit..." 
+                />
               </div>
+              
               <div style={{ display: 'flex', gap: 12 }}>
-                <button className="btn btn-outline" onClick={() => setSelected(null)}>Cancel</button>
-                <button className="btn btn-primary" style={{ flex: 1 }} onClick={handleUpdate}>Save Changes</button>
+                <button className="btn btn-outline" onClick={() => setSelected(null)} style={{ flex: 1 }}>Cancel</button>
+                <button className="btn btn-primary" onClick={handleUpdate} style={{ flex: 2 }}>Save Changes</button>
               </div>
             </div>
           </div>

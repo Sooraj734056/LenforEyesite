@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import useCartStore from '@/store/cartStore';
+import useAuthStore from '@/store/authStore';
 import { resolveMediaUrl } from '@/lib/media';
 import toast from 'react-hot-toast';
 import CartDrawer from '@/components/CartDrawer';
@@ -21,6 +22,7 @@ export default function ProductDetailPage() {
   const { id } = useParams();
   const router = useRouter();
   const { addItem, openCart } = useCartStore();
+  const { user } = useAuthStore();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -70,6 +72,11 @@ export default function ProductDetailPage() {
   };
 
   const handleAddToCart = () => {
+    if (!user) {
+      toast.error('Please login to add items to cart');
+      router.push('/login');
+      return;
+    }
     if (product.lensCompatible) {
       setShowLensConfig(true);
     } else {

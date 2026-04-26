@@ -39,7 +39,7 @@ router.post('/logout', protect, (req, res) => {
 // GET /api/auth/me
 router.get('/me', protect, async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).populate('wishlist', 'name price variants');
+    const user = await User.findById(req.user._id).populate('wishlist', 'name brand price comparePrice discount variants slug frameShape frameMaterial ratings');
     res.json({ success: true, user });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

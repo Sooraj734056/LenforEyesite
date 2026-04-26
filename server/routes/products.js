@@ -79,7 +79,7 @@ router.get('/search/suggestions', async (req, res) => {
         { brand: { $regex: q, $options: 'i' } },
         { tags: { $regex: q, $options: 'i' } }
       ]
-    }).select('name brand category variants').limit(8);
+    }).select('name brand category variants price').limit(8);
     res.json({ success: true, suggestions: products });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -141,25 +141,56 @@ router.delete('/:id', adminAuth, async (req, res) => {
 const csvUpload = multer({ storage: multer.memoryStorage() });
 router.post('/bulk-upload', adminAuth, csvUpload.single('csv'), async (req, res) => {
   try {
+    if (!req.file) return res.status(400).json({ success: false, message: 'No file uploaded.' });
+
     const results = [];
     const { Readable } = require('stream');
     const stream = Readable.from(req.file.buffer.toString());
-    stream.pipe(csv()).on('data', (row) => {
-      results.push({
-        name: row.name, brand: row.brand, category: row.category,
-        gender: row.gender || 'Unisex', price: Number(row.price),
-        comparePrice: Number(row.comparePrice) || undefined,
-        frameShape: row.frameShape, frameMaterial: row.frameMaterial,
-        slug: slugify(row.name || '', { lower: true, strict: true }),
-        variants: [{ color: row.color || 'Black', colorHex: row.colorHex || '#000000', stock: Number(row.stock) || 0 }],
-        description: row.description || '',
-      });
-    }).on('end', async () => {
-      const inserted = await Product.insertMany(results, { ordered: false });
-      res.json({ success: true, inserted: inserted.length, message: `${inserted.length} products imported.` });
+
+    await new Promise((resolve, reject) => {
+      stream.pipe(csv())
+        .on('data', (row) => {
+          if (row.name && row.price) {
+            results.push({
+              name: row.name,
+              brand: row.brand || 'Other',
+              category: row.category || 'Eyeglasses',
+              gender: row.gender || 'Unisex',
+              price: Number(row.price),
+              comparePrice: Number(row.comparePrice) || undefined,
+              frameShape: row.frameShape || 'Round',
+              frameMaterial: row.frameMaterial || 'TR90',
+              slug: slugify(`${row.name}-${Date.now()}`, { lower: true, strict: true }),
+              variants: [{ 
+                color: row.color || 'Black', 
+                colorHex: row.colorHex || '#000000', 
+                stock: Number(row.stock) || 0 
+              }],
+              description: row.description || '',
+            });
+          }
+        })
+        .on('end', resolve)
+        .on('error', reject);
     });
+
+    if (results.length === 0) {
+      return res.status(400).json({ success: false, message: 'No valid products found in CSV.' });
+    }
+
+    const inserted = await Product.insertMany(results, { ordered: false });
+    res.json({ 
+      success: true, 
+      count: inserted.length, 
+      message: `${inserted.length} products successfully imported.` 
+    });
+
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    console.error('Bulk Upload Error:', err);
+    res.status(500).json({ 
+      success: false, 
+      message: err.code === 11000 ? 'Some products already exist (duplicate slug/name).' : err.message 
+    });
   }
 });
 

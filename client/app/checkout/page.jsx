@@ -213,8 +213,9 @@ export default function CheckoutPage() {
       });
       rzp.open();
     } catch (err) {
-      console.error('Payment Init Error:', err);
-      toast.error('Payment initiation failed. Please try again.');
+      console.error('Order/Payment Error:', err);
+      const msg = err.response?.data?.message || 'Order confirmation failed. Please try again.';
+      toast.error(msg);
       setLoading(false);
     }
   };

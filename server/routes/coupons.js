@@ -7,12 +7,12 @@ const adminAuth = require('../middleware/adminAuth');
 // POST /api/coupons/validate — Validate a coupon
 router.post('/validate', protect, async (req, res) => {
   try {
-    const { code, orderAmount } = req.body;
+    const { code, orderAmount, cartItems } = req.body;
     const coupon = await Coupon.findOne({ code: code.toUpperCase(), isActive: true });
     if (!coupon) return res.status(404).json({ success: false, message: 'Coupon not found.' });
-    const result = coupon.isValid(req.user._id, orderAmount);
+    const result = coupon.isValid(req.user._id, orderAmount, cartItems);
     if (!result.valid) return res.status(400).json({ success: false, message: result.message });
-    const discount = coupon.calculateDiscount(orderAmount);
+    const discount = coupon.calculateDiscount(orderAmount, cartItems);
     res.json({ success: true, discount, coupon: { code: coupon.code, type: coupon.type, value: coupon.value, description: coupon.description } });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

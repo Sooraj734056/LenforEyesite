@@ -7,17 +7,24 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, LineElement, 
 import { Bar, Line, Doughnut } from 'react-chartjs-2';
 import styles from './page.module.css';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend, ArcElement);
+
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
+import { 
+  FiLayout, FiBox, FiShoppingBag, FiCalendar, FiTarget, FiArrowLeft, 
+  FiTrendingUp, FiUsers, FiClipboard, FiAlertCircle, FiAward, FiArrowRight, FiBell 
+} from 'react-icons/fi';
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend, ArcElement);
+
 const NAV_ITEMS = [
-  { label: 'Dashboard', href: '/admin', icon: '📊' },
-  { label: 'Products', href: '/admin/products', icon: '👓' },
-  { label: 'Orders', href: '/admin/orders', icon: '📦' },
-  { label: 'Appointments', href: '/admin/appointments', icon: '📅' },
-  { label: 'Marketing', href: '/admin/marketing', icon: '🎯' },
-  { label: 'Back to Store', href: '/', icon: '🏪' },
+  { label: 'Dashboard', href: '/admin', icon: <FiLayout /> },
+  { label: 'Products', href: '/admin/products', icon: <FiBox /> },
+  { label: 'Orders', href: '/admin/orders', icon: <FiShoppingBag /> },
+  { label: 'Appointments', href: '/admin/appointments', icon: <FiCalendar /> },
+  { label: 'Marketing', href: '/admin/marketing', icon: <FiTarget /> },
+  { label: 'Back to Store', href: '/', icon: <FiArrowLeft /> },
 ];
 
 export default function AdminDashboard() {
@@ -59,10 +66,12 @@ export default function AdminDashboard() {
       label: 'Revenue (₹)',
       data: revenueChart.map(d => d.revenue),
       borderColor: chartColors.primary,
-      backgroundColor: 'rgba(0,174,239,0.1)',
+      backgroundColor: 'rgba(0,174,239,0.08)',
       fill: true,
       tension: 0.4,
       pointBackgroundColor: chartColors.primary,
+      pointRadius: 4,
+      pointHoverRadius: 6,
     }]
   };
 
@@ -71,13 +80,35 @@ export default function AdminDashboard() {
     datasets: [{
       data: categoryRevenue.slice(0, 6).map(c => c.revenue),
       backgroundColor: ['#00AEEF', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'],
+      borderWidth: 0,
+      hoverOffset: 15
     }]
   };
 
   const chartOptions = {
     responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } }, x: { grid: { display: false } } }
+    plugins: { 
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#1e293b',
+        padding: 12,
+        titleFont: { size: 14, weight: 'bold' },
+        bodyFont: { size: 13 },
+        cornerRadius: 8,
+        displayColors: false
+      }
+    },
+    scales: { 
+      y: { 
+        beginAtZero: true, 
+        grid: { color: 'rgba(0,0,0,0.03)', drawBorder: false },
+        ticks: { font: { size: 11 } }
+      }, 
+      x: { 
+        grid: { display: false },
+        ticks: { font: { size: 11 } }
+      } 
+    }
   };
 
   const STATUS_COLORS = {
@@ -91,10 +122,10 @@ export default function AdminDashboard() {
       {/* Sidebar */}
       <aside className={styles.sidebar}>
         <div className={styles.sidebarBrand}>
-          <div className={styles.brandIcon}>👓</div>
+          <div className={styles.brandIcon}><FiBox /></div>
           <div>
-            <div className={styles.brandName}>Lens Admin</div>
-            <div className={styles.brandSub}>Control Panel</div>
+            <div className={styles.brandName}>LensPanel</div>
+            <div className={styles.brandSub}>PRO DASHBOARD</div>
           </div>
         </div>
         <nav className={styles.sidebarNav}>
@@ -107,9 +138,9 @@ export default function AdminDashboard() {
         </nav>
         <div className={styles.sidebarUser}>
           <div className={styles.userAvatar}>{user.name[0]}</div>
-          <div>
+          <div className={styles.userInfo}>
             <div className={styles.userName}>{user.name}</div>
-            <div className={styles.userRole}>Administrator</div>
+            <div className={styles.userRole}>System Admin</div>
           </div>
         </div>
       </aside>
@@ -133,16 +164,16 @@ export default function AdminDashboard() {
             {/* Stats Grid */}
             <div className={styles.statsGrid}>
               {[
-                { label: 'Total Revenue', value: `₹${(stats?.totalRevenue || 0).toLocaleString('en-IN')}`, icon: '💰', color: '#00AEEF', sub: 'All time' },
-                { label: 'Total Orders', value: (stats?.totalOrders || 0).toLocaleString(), icon: '📦', color: '#10B981', sub: `${stats?.todayOrders || 0} today` },
-                { label: 'Total Customers', value: (stats?.totalUsers || 0).toLocaleString(), icon: '👥', color: '#8B5CF6', sub: 'Registered users' },
-                { label: 'Total Products', value: (stats?.totalProducts || 0).toLocaleString(), icon: '👓', color: '#F59E0B', sub: 'Active listings' },
-                { label: "Pending Prescriptions", value: (stats?.pendingPrescriptions || 0).toLocaleString(), icon: '📋', color: '#EF4444', sub: 'Need verification' },
-                { label: "Pending Appointments", value: (stats?.pendingAppointments || 0).toLocaleString(), icon: '📅', color: '#EC4899', sub: 'Eye test requests' },
+                { label: 'Total Revenue', value: `₹${(stats?.totalRevenue || 0).toLocaleString('en-IN')}`, icon: <FiTrendingUp />, color: '#00AEEF', sub: 'All time' },
+                { label: 'Total Orders', value: (stats?.totalOrders || 0).toLocaleString(), icon: <FiShoppingBag />, color: '#10B981', sub: `${stats?.todayOrders || 0} today` },
+                { label: 'Total Customers', value: (stats?.totalUsers || 0).toLocaleString(), icon: <FiUsers />, color: '#8B5CF6', sub: 'Registered users' },
+                { label: 'Total Products', value: (stats?.totalProducts || 0).toLocaleString(), icon: <FiBox />, color: '#F59E0B', sub: 'Active listings' },
+                { label: "Pending Prescriptions", value: (stats?.pendingPrescriptions || 0).toLocaleString(), icon: <FiClipboard />, color: '#EF4444', sub: 'Need verification' },
+                { label: "Pending Appointments", value: (stats?.pendingAppointments || 0).toLocaleString(), icon: <FiCalendar />, color: '#EC4899', sub: 'Eye test requests' },
               ].map(s => (
                 <div key={s.label} className={styles.statCard} id={`stat-${s.label.toLowerCase().replace(/\s/g, '-')}`}>
-                  <div className={styles.statIcon} style={{ background: `${s.color}18` }}>
-                    <span style={{ fontSize: '1.5rem' }}>{s.icon}</span>
+                  <div className={styles.statIcon} style={{ background: `${s.color}12`, color: s.color }}>
+                    {s.icon}
                   </div>
                   <div className={styles.statInfo}>
                     <div className={styles.statValue}>{s.value}</div>
@@ -182,8 +213,8 @@ export default function AdminDashboard() {
               {/* Recent Orders */}
               <div className={styles.tableCard}>
                 <div className={styles.tableHeader}>
-                  <h3>Recent Orders</h3>
-                  <Link href="/admin/orders" className={styles.viewAll}>View All →</Link>
+                  <h3><FiShoppingBag /> Recent Orders</h3>
+                  <Link href="/admin/orders" className={styles.viewAll}>View All <FiArrowRight /></Link>
                 </div>
                 <div className={styles.tableWrap}>
                   <table className={styles.table}>
@@ -234,20 +265,22 @@ export default function AdminDashboard() {
             </div>
 
             {/* Top Products */}
-            <div className={styles.tableCard}>
+            <div className={styles.tableCard} style={{ gridColumn: '1 / -1' }}>
               <div className={styles.tableHeader}>
-                <h3>🏆 Top Selling Products</h3>
+                <h3><FiAward /> Top Selling Products</h3>
               </div>
-              <div className={styles.topList}>
+              <div className={styles.topList} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
                 {topProducts.map((p, i) => (
                   <div key={p._id} className={styles.topItem}>
-                    <span className={styles.topRank}>#{i + 1}</span>
+                    <span className={styles.topRank}>{i + 1}</span>
                     <div className={styles.topInfo}>
                       <div className={styles.topName}>{p.name}</div>
                       <div className={styles.topBrand}>{p.brand} · ₹{p.price?.toLocaleString('en-IN')}</div>
                     </div>
-                    <div className={styles.topSold}>{p.soldCount} sold</div>
-                    <div className={styles.topRating}>⭐ {p.ratings?.average || 0}</div>
+                    <div className={styles.topSold}>
+                      <div>{p.soldCount}</div>
+                      <div>SOLD</div>
+                    </div>
                   </div>
                 ))}
               </div>

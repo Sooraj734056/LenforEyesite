@@ -81,8 +81,9 @@ const OrderSchema = new mongoose.Schema({
 // Auto-generate order number
 OrderSchema.pre('save', async function(next) {
   if (!this.orderNumber) {
-    const count = await mongoose.model('Order').countDocuments();
-    this.orderNumber = `LFE${String(count + 1001).padStart(6, '0')}`;
+    const timestamp = Date.now().toString().slice(-6);
+    const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    this.orderNumber = `LFE${timestamp}${random}`;
   }
   next();
 });
