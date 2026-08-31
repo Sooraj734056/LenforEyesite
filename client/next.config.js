@@ -19,7 +19,9 @@ const nextConfig = {
   images: {
     domains: ['localhost', 'res.cloudinary.com', 'placehold.co'],
     remotePatterns: [
-      uploadsPattern
+      uploadsPattern,
+      { protocol: 'https', hostname: '**' },
+      { protocol: 'http', hostname: '**' }
     ]
   },
   env: {
