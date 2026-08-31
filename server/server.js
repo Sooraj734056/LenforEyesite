@@ -26,12 +26,16 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    // allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.vercel.app')) {
+    if (
+      allowedOrigins.indexOf(origin) !== -1 ||
+      origin.endsWith('.vercel.app') ||
+      origin.endsWith('.onrender.com') ||
+      origin.includes('localhost')
+    ) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(null, true);
     }
   },
   credentials: true,
@@ -45,35 +49,36 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ─── Database ────────────────────────────────────────────────────────────────
 const connectDB = async () => {
-  const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/lens-ecommerce';
-  try {
-    await mongoose.connect(mongoUri, {
-      serverSelectionTimeoutMS: 5000
-    });
-    console.log('✅ MongoDB connected successfully!');
-  } catch (err) {
-    console.warn('⚠️ MongoDB connection failed:', err.message);
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('🔄 Starting In-Memory MongoDB server for development...');
-      try {
-        const { MongoMemoryServer } = require('mongodb-memory-server');
-        const mongoServer = await MongoMemoryServer.create({
-          binary: { version: '4.4.18' }
-        });
-        const memUri = mongoServer.getUri();
-        await mongoose.connect(memUri);
-        console.log('✅ In-Memory MongoDB connected successfully!');
-
-        console.log('🌱 Auto-seeding initial database (products, banners, users)...');
-        const seed = require('./seed-script-logic');
-        await seed();
-        console.log('🚀 Database seeded successfully!');
-      } catch (memErr) {
-        console.error('❌ In-Memory MongoDB Error:', memErr);
-      }
-    } else {
-      console.error('❌ Database connection error in production. Please check MONGO_URI in environment variables.');
+  const mongoUri = process.env.MONGO_URI;
+  
+  if (mongoUri) {
+    try {
+      await mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 5000 });
+      console.log('✅ MongoDB connected successfully via MONGO_URI!');
+      return;
+    } catch (err) {
+      console.warn('⚠️ Primary MONGO_URI connection failed:', err.message);
     }
+  } else {
+    console.warn('⚠️ MONGO_URI environment variable is not defined.');
+  }
+
+  console.log('🔄 Initializing In-Memory MongoDB fallback server...');
+  try {
+    const { MongoMemoryServer } = require('mongodb-memory-server');
+    const mongoServer = await MongoMemoryServer.create({
+      binary: { version: '4.4.18' }
+    });
+    const memUri = mongoServer.getUri();
+    await mongoose.connect(memUri);
+    console.log('✅ Fallback In-Memory MongoDB connected successfully!');
+
+    console.log('🌱 Auto-seeding initial database (products, banners, users)...');
+    const seed = require('./seed-script-logic');
+    await seed();
+    console.log('🚀 Database seeded successfully!');
+  } catch (memErr) {
+    console.error('❌ In-Memory MongoDB Fallback Error:', memErr.message);
   }
 };
 connectDB();
