@@ -295,3 +295,6 @@ async function seed() {
 }
 
 module.exports = seed;
+module.exports.seed = seed;
+module.exports.sampleProducts = sampleProducts;
+module.exports.sampleBanners = sampleBanners;
